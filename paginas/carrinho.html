@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Carrinho — Catia-se Brechó</title>
+<script src="supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#C9A84C;--salmon:#E8735A;--salmon-dark:#C45A43;--dark:#1a1a1a;--gray:#888;--font:'Poppins',sans-serif;}
+body{font-family:var(--font);background:#f8f8f8;color:#222;}
+a{text-decoration:none;color:inherit;}
+
+.header{background:#000;padding:6px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.header img{height:100px;width:auto;max-width:420px;object-fit:contain;}
+.back-btn{display:flex;align-items:center;gap:8px;background:#2a2a2a;color:#ccc;padding:9px 18px;border-radius:50px;font-size:13px;font-weight:600;transition:background .2s;}
+.back-btn:hover{background:var(--salmon);color:#fff;}
+
+.page-title{background:#fff;padding:24px 32px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;}
+.page-title h1{font-size:22px;font-weight:800;color:var(--dark);}
+.page-title span{background:#f0f0f0;border-radius:20px;padding:4px 12px;font-size:13px;font-weight:600;color:var(--gray);}
+
+.container{max-width:1100px;margin:32px auto;padding:0 32px;display:grid;grid-template-columns:1fr 360px;gap:24px;}
+
+/* ITENS */
+.cart-panel{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.cart-panel-header{padding:18px 24px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;}
+.cart-panel-header h2{font-size:15px;font-weight:700;}
+.btn-clear{background:none;border:none;font-family:var(--font);font-size:12px;color:var(--gray);cursor:pointer;display:flex;align-items:center;gap:6px;}
+.btn-clear:hover{color:#e53935;}
+
+.cart-item{display:flex;align-items:center;gap:16px;padding:18px 24px;border-bottom:1px solid #f8f8f8;}
+.cart-item__img{width:72px;height:90px;border-radius:10px;background:linear-gradient(135deg,#f5e6e0,#ead5cc);flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.cart-item__img img{width:100%;height:100%;object-fit:cover;}
+.cart-item__info{flex:1;}
+.cart-item__brand{font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;}
+.cart-item__name{font-size:14px;font-weight:600;color:var(--dark);margin:2px 0 4px;}
+.cart-item__meta{font-size:12px;color:var(--gray);}
+.cart-item__price{font-size:17px;font-weight:800;color:var(--dark);flex-shrink:0;}
+.cart-item__remove{background:none;border:none;cursor:pointer;color:#ccc;margin-left:8px;transition:color .2s;}
+.cart-item__remove:hover{color:#e53935;}
+
+.cart-empty{padding:60px 24px;text-align:center;color:var(--gray);}
+.cart-empty svg{margin:0 auto 16px;opacity:.2;}
+.cart-empty h3{font-size:18px;font-weight:700;margin-bottom:8px;}
+.cart-empty p{font-size:14px;margin-bottom:24px;}
+.btn-shop{display:inline-flex;align-items:center;gap:8px;background:var(--salmon);color:#fff;padding:12px 28px;border-radius:50px;font-weight:700;font-size:14px;}
+
+/* RESUMO */
+.summary{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);padding:24px;align-self:start;position:sticky;top:24px;}
+.summary h2{font-size:16px;font-weight:800;margin-bottom:20px;}
+.summary-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:12px;color:#555;}
+.summary-row.total{font-size:18px;font-weight:800;color:var(--dark);border-top:2px solid #f0f0f0;padding-top:14px;margin-top:6px;}
+.summary-row.total span:last-child{color:var(--salmon);}
+
+.frete-box{background:#f8f8f8;border-radius:10px;padding:14px;margin:16px 0;}
+.frete-box p{font-size:12px;font-weight:700;color:#333;margin-bottom:8px;}
+.frete-row{display:flex;gap:8px;}
+.frete-input{flex:1;border:1.5px solid #ddd;border-radius:8px;padding:9px 12px;font-family:var(--font);font-size:13px;outline:none;}
+.frete-input:focus{border-color:var(--salmon);}
+.frete-btn{padding:9px 14px;background:var(--salmon);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);}
+.frete-result{font-size:12px;color:#388e3c;margin-top:8px;display:none;}
+
+.btn-checkout{width:100%;padding:15px;background:var(--salmon);color:#fff;border:none;border-radius:12px;font-family:var(--font);font-size:15px;font-weight:800;cursor:pointer;margin-top:16px;transition:background .2s;}
+.btn-checkout:hover{background:var(--salmon-dark);}
+.btn-checkout:disabled{background:#ccc;cursor:not-allowed;}
+.secure-info{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--gray);margin-top:12px;}
+
+@media(max-width:768px){.container{grid-template-columns:1fr;}.summary{position:static;}}
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="index.html"><img src="logo.png" alt="Catia-se Brechó"/></a>
+  <a href="index.html" class="back-btn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Continuar Comprando
+  </a>
+</header>
+
+<div class="page-title">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+  <h1>Meu Carrinho</h1>
+  <span id="itemCount">0 itens</span>
+</div>
+
+<div class="container">
+  <!-- Itens -->
+  <div class="cart-panel">
+    <div class="cart-panel-header">
+      <h2>Itens selecionados</h2>
+      <button class="btn-clear" onclick="clearCart()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        Limpar carrinho
+      </button>
+    </div>
+    <div id="cartItems"></div>
+  </div>
+
+  <!-- Resumo -->
+  <div class="summary">
+    <h2>Resumo do Pedido</h2>
+    <div class="summary-row"><span>Subtotal</span><span id="subtotal">R$ 0,00</span></div>
+    <div class="summary-row"><span>Frete</span><span id="freteVal">Calcule abaixo</span></div>
+
+    <div class="frete-box">
+      <p>🚚 Calcular frete</p>
+      <div class="frete-row">
+        <input class="frete-input" type="text" id="cepCart" placeholder="CEP" maxlength="9"/>
+        <button class="frete-btn" onclick="calcFrete()">OK</button>
+      </div>
+      <p class="frete-result" id="freteResult"></p>
+    </div>
+
+    <div class="summary-row total"><span>Total</span><span id="total">R$ 0,00</span></div>
+    <p style="font-size:11px;color:var(--gray);margin-bottom:4px;text-align:center;">ou em até 6x sem juros no cartão</p>
+
+    <button class="btn-checkout" id="checkoutBtn" onclick="doCheckout()">Finalizar Compra</button>
+    <div class="secure-info">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Pagamento seguro via Mercado Pago
+    </div>
+  </div>
+</div>
+
+<script>
+function getCart(){ return JSON.parse(localStorage.getItem('catiase_cart')||'[]'); }
+function saveCart(c){ localStorage.setItem('catiase_cart', JSON.stringify(c)); }
+function fmt(n){ return 'R$ '+n.toFixed(2).replace('.',','); }
+
+function renderCart(){
+  const cart = getCart();
+  const el = document.getElementById('cartItems');
+  document.getElementById('itemCount').textContent = cart.length + (cart.length===1?' item':' itens');
+
+  if(cart.length===0){
+    el.innerHTML = `<div class="cart-empty">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <h3>Seu carrinho está vazio</h3>
+      <p>Adicione produtos para continuar</p>
+      <a href="index.html" class="btn-shop">🛍️ Ver Produtos</a>
+    </div>`;
+    document.getElementById('checkoutBtn').disabled = true;
+    updateTotals(0);
+    return;
+  }
+
+  el.innerHTML = cart.map((item,i) => `
+    <div class="cart-item">
+      <div class="cart-item__img">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>
+      </div>
+      <div class="cart-item__info">
+        <p class="cart-item__brand">${item.brand}</p>
+        <p class="cart-item__name">${item.name}</p>
+        <p class="cart-item__meta">Tamanho: ${item.size} · Estado: ${item.condition}</p>
+      </div>
+      <p class="cart-item__price">${fmt(item.price)}</p>
+      <button class="cart-item__remove" onclick="removeItem(${i})" title="Remover">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+
+  const sub = cart.reduce((a,b)=>a+b.price,0);
+  updateTotals(sub);
+  document.getElementById('checkoutBtn').disabled = false;
+}
+
+function updateTotals(sub){
+  document.getElementById('subtotal').textContent = fmt(sub);
+  document.getElementById('total').textContent = fmt(sub);
+}
+
+function removeItem(i){
+  const cart = getCart();
+  cart.splice(i,1);
+  saveCart(cart);
+  renderCart();
+  updateBadge();
+}
+
+function clearCart(){
+  if(!confirm('Limpar todos os itens do carrinho?')) return;
+  saveCart([]);
+  renderCart();
+  updateBadge();
+}
+
+function updateBadge(){
+  // Atualizar badge no index se aberto
+  localStorage.setItem('catiase_cartCount', getCart().length);
+}
+
+function calcFrete(){
+  const cep = document.getElementById('cepCart').value.replace(/\D/g,'');
+  const res  = document.getElementById('freteResult');
+  if(cep.length<8){res.style.color='#e53935';res.textContent='CEP inválido.';res.style.display='block';return;}
+  res.style.color='#888';res.textContent='Calculando...';res.style.display='block';
+  setTimeout(()=>{
+    const cart = getCart();
+    const sub  = cart.reduce((a,b)=>a+b.price,0);
+    // Frete baseado no CEP (região) e valor do pedido
+    const cepNum = parseInt(cep);
+    let pac, sedex;
+    // Frete grátis acima de R$399
+    if(sub >= 399){
+      pac = 0; sedex = 0;
+    } else {
+      // SP capital e Grande SP (01000-09999, 11000-19999)
+      if(cepNum >= 1000000 && cepNum <= 19999999){
+        pac = 9.90; sedex = 16.90;
+      }
+      // RJ, ES, MG (20000-39999)
+      else if(cepNum >= 20000000 && cepNum <= 39999999){
+        pac = 11.90; sedex = 19.90;
+      }
+      // Sul: PR, SC, RS (80000-99999)
+      else if(cepNum >= 80000000 && cepNum <= 99999999){
+        pac = 13.90; sedex = 22.90;
+      }
+      // Nordeste (40000-65999)
+      else if(cepNum >= 40000000 && cepNum <= 65999999){
+        pac = 15.90; sedex = 26.90;
+      }
+      // Norte e Centro-Oeste (66000-79999)
+      else {
+        pac = 17.90; sedex = 29.90;
+      }
+    }
+    res.style.color='#388e3c';
+    res.innerHTML = pac===0
+      ? '✅ Frete GRÁTIS para o seu CEP!'
+      : `📦 PAC: R$ ${pac.toFixed(2).replace('.',',')} (5-8 dias úteis)<br>⚡ SEDEX: R$ ${sedex.toFixed(2).replace('.',',')} (1-3 dias úteis)`;
+    document.getElementById('freteVal').textContent = pac===0 ? 'Grátis' : `R$ ${pac.toFixed(2).replace('.',',')}`;
+    document.getElementById('total').textContent = fmt(sub + pac);
+  }, 900);
+}
+
+// CEP mask
+document.getElementById('cepCart').addEventListener('input',function(){
+  this.value=this.value.replace(/\D/g,'').replace(/(\d{5})(\d)/,'$1-$2').slice(0,9);
+});
+
+function doCheckout(){
+  const user = localStorage.getItem('catiase_loggedUser');
+  if(!user){
+    if(confirm('Você precisa estar logado para finalizar a compra.\nDeseja ir para o login?'))
+      window.location.href='cadastro.html';
+    return;
+  }
+  alert('🛒 Redirecionando para o pagamento via Mercado Pago...\n\n(Integração com gateway de pagamento será configurada ao publicar o site.)');
+}
+
+renderCart();
+
+// Verificar usuário logado
+const u = localStorage.getItem('catiase_loggedUser');
+if(u){
+  const user = JSON.parse(u);
+  console.log('Logado como:', user.nome);
+}
+</script>
+</body>
+</html>

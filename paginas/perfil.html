@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Meu Perfil — Catia-se Brechó</title>
+<script src="supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#C9A84C;--salmon:#E8735A;--salmon-dark:#C45A43;--dark:#1a1a1a;--gray:#888;--font:'Poppins',sans-serif;}
+body{font-family:var(--font);background:#f8f8f8;color:#222;}
+a{text-decoration:none;color:inherit;}
+
+.header{background:#000;padding:6px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.header img{height:100px;width:auto;max-width:420px;object-fit:contain;}
+.back-btn{display:flex;align-items:center;gap:8px;background:#2a2a2a;color:#ccc;padding:9px 18px;border-radius:50px;font-size:13px;font-weight:600;transition:background .2s;}
+.back-btn:hover{background:var(--salmon);color:#fff;}
+
+.container{max-width:1000px;margin:36px auto;padding:0 32px;display:grid;grid-template-columns:260px 1fr;gap:24px;}
+
+/* SIDEBAR PERFIL */
+.profile-side{display:flex;flex-direction:column;gap:16px;}
+.profile-card{background:#fff;border-radius:16px;padding:28px 20px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.profile-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--salmon),var(--salmon-dark));display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;margin:0 auto 14px;}
+.profile-name{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.profile-email{font-size:12px;color:var(--gray);margin-bottom:16px;word-break:break-all;}
+.profile-since{font-size:11px;color:#bbb;}
+
+.side-menu{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.side-menu-item{display:flex;align-items:center;gap:12px;padding:14px 20px;font-size:13px;font-weight:600;color:#555;cursor:pointer;border-left:3px solid transparent;transition:background .2s,color .2s,border-color .2s;}
+.side-menu-item:hover,.side-menu-item.active{background:#fff8f6;color:var(--salmon);border-left-color:var(--salmon);}
+.side-menu-item svg{flex-shrink:0;color:#aaa;}
+.side-menu-item.active svg,.side-menu-item:hover svg{color:var(--salmon);}
+.side-menu-item.danger{color:#e53935;}
+.side-menu-item.danger svg{color:#e53935;}
+.side-menu-item.danger:hover{background:#fff5f5;border-left-color:#e53935;}
+.side-divider{height:1px;background:#f0f0f0;}
+
+/* MAIN CONTENT */
+.profile-main{}
+.panel{background:#fff;border-radius:16px;padding:28px 32px;box-shadow:0 2px 12px rgba(0,0,0,.06);display:none;}
+.panel.active{display:block;}
+.panel-title{font-size:18px;font-weight:800;color:var(--dark);margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+.panel-title::before{content:'';width:4px;height:22px;background:var(--salmon);border-radius:2px;display:block;}
+.panel-sub{font-size:13px;color:var(--gray);margin-bottom:28px;}
+
+.field{margin-bottom:18px;}
+.field label{display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.field input{width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px 16px;font-family:var(--font);font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s;}
+.field input:focus{border-color:var(--salmon);box-shadow:0 0 0 3px rgba(232,115,90,.1);}
+.field input:disabled{background:#f8f8f8;color:#aaa;cursor:not-allowed;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.field-hint{font-size:11px;color:#bbb;margin-top:4px;}
+
+.btn-save{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--salmon);color:#fff;border:none;border-radius:10px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;}
+.btn-save:hover{background:var(--salmon-dark);}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:transparent;color:var(--dark);border:2px solid #ddd;border-radius:10px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;margin-left:10px;}
+.btn-outline:hover{border-color:var(--salmon);color:var(--salmon);}
+.btn-danger{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:#e53935;color:#fff;border:none;border-radius:10px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;}
+.btn-danger:hover{background:#c62828;}
+
+.success-msg{background:#e8f5e9;border-radius:10px;padding:14px 18px;font-size:13px;color:#388e3c;margin-bottom:20px;display:none;align-items:center;gap:8px;}
+.success-msg.show{display:flex;}
+.error-msg{background:#ffebee;border-radius:10px;padding:14px 18px;font-size:13px;color:#e53935;margin-bottom:20px;display:none;align-items:center;gap:8px;}
+.error-msg.show{display:flex;}
+
+/* Pedidos */
+.empty-orders{text-align:center;padding:48px 24px;color:var(--gray);}
+.empty-orders svg{margin:0 auto 14px;opacity:.2;}
+.empty-orders h3{font-size:16px;font-weight:700;margin-bottom:8px;}
+.btn-shop{display:inline-flex;align-items:center;gap:8px;background:var(--salmon);color:#fff;padding:11px 24px;border-radius:50px;font-weight:700;font-size:13px;margin-top:16px;}
+
+/* Endereço */
+.address-card{background:#f8f8f8;border-radius:12px;padding:18px 20px;margin-bottom:16px;border:1.5px solid #eee;display:flex;justify-content:space-between;align-items:center;}
+.address-card p{font-size:13px;color:#555;line-height:1.7;}
+.address-card strong{color:var(--dark);}
+
+/* Danger zone */
+.danger-zone{background:#fff5f5;border:1.5px solid #ffcdd2;border-radius:12px;padding:20px 24px;margin-top:24px;}
+.danger-zone h3{font-size:14px;font-weight:700;color:#e53935;margin-bottom:6px;}
+.danger-zone p{font-size:13px;color:#888;margin-bottom:14px;}
+
+@media(max-width:768px){.container{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html"><img src="logo.png" alt="Catia-se Brechó"/></a>
+  <a href="index.html" class="back-btn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Voltar ao site
+  </a>
+</header>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <div class="profile-side">
+    <div class="profile-card">
+      <div class="profile-avatar" id="sideAvatar">?</div>
+      <p class="profile-name" id="sideName">Carregando...</p>
+      <p class="profile-email" id="sideEmail"></p>
+      <p class="profile-since" id="sideSince"></p>
+    </div>
+
+    <div class="side-menu">
+      <div class="side-menu-item active" onclick="showPanel('dados')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Meus Dados
+      </div>
+      <div class="side-menu-item" onclick="showPanel('senha')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Alterar Senha
+      </div>
+      <div class="side-menu-item" onclick="showPanel('endereco')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Endereços
+      </div>
+      <div class="side-menu-item" onclick="showPanel('notifs')" id="notifMenuItem">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Notificações
+        <span id="notifSideBadge" style="margin-left:auto;background:var(--salmon);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;display:none;"></span>
+      </div>
+      <div class="side-menu-item" onclick="showPanel('pedidos')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Meus Pedidos
+      </div>
+      <div class="side-divider"></div>
+      <div class="side-menu-item danger" onclick="doLogout()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair da Conta
+      </div>
+    </div>
+  </div>
+
+  <!-- PAINÉIS -->
+  <div class="profile-main">
+
+    <!-- DADOS PESSOAIS -->
+    <div class="panel active" id="panel-dados">
+      <p class="panel-title">Meus Dados</p>
+      <p class="panel-sub">Atualize suas informações pessoais</p>
+      <div class="success-msg" id="dadosSuccess">✅ Dados atualizados com sucesso!</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Nome</label>
+          <input type="text" id="editNome" placeholder="Seu nome"/>
+        </div>
+        <div class="field">
+          <label>Sobrenome</label>
+          <input type="text" id="editSobrenome" placeholder="Sobrenome"/>
+        </div>
+      </div>
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="editEmail" disabled/>
+        <p class="field-hint">O e-mail não pode ser alterado.</p>
+      </div>
+      <div class="field">
+        <label>CPF</label>
+        <input type="text" id="editCpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCpf(this)"/>
+      </div>
+      <div class="field">
+        <label>Data de Nascimento</label>
+        <input type="date" id="editNasc"/>
+      </div>
+      <button class="btn-save" onclick="saveDados()">Salvar Alterações</button>
+    </div>
+
+    <!-- ALTERAR SENHA -->
+    <div class="panel" id="panel-senha">
+      <p class="panel-title">Alterar Senha</p>
+      <p class="panel-sub">Escolha uma senha segura com pelo menos 6 caracteres</p>
+      <div class="success-msg" id="senhaSuccess">✅ Senha alterada com sucesso!</div>
+      <div class="error-msg" id="senhaError">❌ <span id="senhaErrorMsg"></span></div>
+      <div class="field">
+        <label>Senha Atual</label>
+        <input type="password" id="senhaAtual" placeholder="Digite sua senha atual"/>
+      </div>
+      <div class="field">
+        <label>Nova Senha</label>
+        <input type="password" id="senhaNova" placeholder="Mínimo 6 caracteres"/>
+      </div>
+      <div class="field">
+        <label>Confirmar Nova Senha</label>
+        <input type="password" id="senhaConfirm" placeholder="Repita a nova senha"/>
+      </div>
+      <button class="btn-save" onclick="saveSenha()">Alterar Senha</button>
+    </div>
+
+    <!-- ENDEREÇOS -->
+    <div class="panel" id="panel-endereco">
+      <p class="panel-title">Meus Endereços</p>
+      <p class="panel-sub">Gerencie seus endereços de entrega</p>
+      <div class="success-msg" id="endSuccess">✅ Endereço salvo com sucesso!</div>
+      <div id="addressList"></div>
+      <hr style="border:none;border-top:1px solid #f0f0f0;margin:20px 0;"/>
+      <p style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:16px;">Adicionar endereço</p>
+      <div class="field">
+        <label>CEP</label>
+        <div style="display:flex;gap:10px;">
+          <input type="text" id="endCep" placeholder="00000-000" maxlength="9" style="flex:1;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px 16px;font-family:inherit;font-size:14px;outline:none;" oninput="maskCep(this)"/>
+          <button onclick="buscaCep()" style="padding:12px 18px;background:var(--salmon);color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;">Buscar</button>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Rua</label><input type="text" id="endRua" placeholder="Rua / Avenida"/></div>
+        <div class="field"><label>Número</label><input type="text" id="endNum" placeholder="Nº"/></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Bairro</label><input type="text" id="endBairro" placeholder="Bairro"/></div>
+        <div class="field"><label>Complemento</label><input type="text" id="endComp" placeholder="Apto, bloco..."/></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Cidade</label><input type="text" id="endCidade" placeholder="Cidade"/></div>
+        <div class="field"><label>Estado</label><input type="text" id="endEstado" placeholder="UF" maxlength="2"/></div>
+      </div>
+      <button class="btn-save" onclick="saveEndereco()">Salvar Endereço</button>
+    </div>
+
+    <!-- NOTIFICAÇÕES -->
+    <div class="panel" id="panel-notifs">
+      <p class="panel-title">Notificações</p>
+      <p class="panel-sub">Respostas da vendedora e atualizações da sua conta</p>
+      <div id="notifList"></div>
+    </div>
+
+    <!-- PEDIDOS -->
+    <div class="panel" id="panel-pedidos">
+      <p class="panel-title">Meus Pedidos</p>
+      <p class="panel-sub">Histórico das suas compras</p>
+      <div class="empty-orders">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <h3>Nenhum pedido ainda</h3>
+        <p>Quando você fizer uma compra, ela aparecerá aqui.</p>
+        <a href="index.html" class="btn-shop">🛍️ Ver Produtos</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── VERIFICAR LOGIN ──
+if(!isLogged()){ window.location.href='cadastro.html'; }
+
+const loggedUser = getLoggedUser();
+
+// ── CARREGAR DADOS DO USUÁRIO ──
+async function loadUser(){
+  await Auth.loadProfile(loggedUser.id);
+  const user = getUserProfile();
+  if(!user) return;
+
+  // Sidebar
+  document.getElementById('sideAvatar').textContent = user.nome.charAt(0).toUpperCase();
+  document.getElementById('sideName').textContent   = user.nome||'';
+  document.getElementById('sideEmail').textContent  = loggedUser.email||'';
+  document.getElementById('sideSince').textContent  = 'Cliente desde '+new Date(user.criado_em||Date.now()).toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+
+  // Campos
+  const parts = user.nome.split(' ');
+  document.getElementById('editNome').value     = parts[0]||'';
+  document.getElementById('editSobrenome').value= parts.slice(1).join(' ')||'';
+  document.getElementById('editEmail').value    = user.email;
+  document.getElementById('editCpf').value      = user.cpf||'';
+  document.getElementById('editNasc').value     = user.nasc||'';
+
+  // Endereços
+  renderAddresses(user.enderecos||[]);
+}
+
+// ── PAINÉIS ──
+function showPanel(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.side-menu-item:not(.danger)').forEach(i=>i.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  if(id==='notifs') loadNotifs();
+}
+
+// ── SALVAR DADOS ──
+function saveDados(){
+  const nome = document.getElementById('editNome').value.trim();
+  const sobr = document.getElementById('editSobrenome').value.trim();
+  const cpf  = document.getElementById('editCpf').value.trim();
+  const nasc = document.getElementById('editNasc').value;
+  if(!nome){alert('Informe seu nome.');return;}
+  const users = JSON.parse(localStorage.getItem('catiase_users')||'[]');
+  const idx   = users.findIndex(u=>u.email===loggedUser.email);
+  if(idx===-1) return;
+  users[idx].nome = nome+(sobr?' '+sobr:'');
+  users[idx].cpf  = cpf;
+  users[idx].nasc = nasc;
+  try{
+    await Perfil.atualizar({nome:nome+(sobr?' '+sobr:''), cpf, data_nascimento:nasc||null});
+    const s = document.getElementById('dadosSuccess');
+    s.classList.add('show');
+    setTimeout(()=>s.classList.remove('show'), 3000);
+    loadUser();
+  }catch(e){ alert('Erro ao salvar: '+e.message); }
+loadNotifs();
+
+async function loadNotifs(){
+  try{
+    const notifs = await Notificacoes.listar();
+    const unread = notifs ? notifs.filter(n=>!n.lida).length : 0;
+
+  // Badge sidebar
+  const badge = document.getElementById('notifSideBadge');
+  if(badge){
+    badge.style.display = unread>0 ? 'inline-block' : 'none';
+    badge.textContent=unread; }
+  }
+
+  // Renderizar lista
+  const el = document.getElementById('notifList');
+  if(!el) return;
+  if(!notifs.length){
+    el.innerHTML=`<div style="text-align:center;padding:48px 24px;color:#aaa;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 12px;opacity:.3;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <p style="font-size:14px;font-weight:600;">Nenhuma notificação ainda</p>
+      <p style="font-size:13px;margin-top:4px;">Quando a vendedora responder suas perguntas, você verá aqui.</p>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = (notifs||[]).map((n,i)=>`
+    <div style="border:1.5px solid ${n.lida?'#f0f0f0':'var(--salmon)'};border-radius:12px;padding:16px 18px;margin-bottom:12px;background:${n.lida?'#fff':'#fff8f6'};cursor:pointer;" onclick="markNotifRead(${i})">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <p style="font-size:13px;font-weight:700;color:${n.lida?'#555':'var(--salmon)'};">${n.msg}</p>
+        ${!n.lida?'<span style="background:var(--salmon);color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;">NOVA</span>':''}
+      </div>
+      ${n.reply?`<div style="background:#f8f8f8;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:13px;color:#555;border-left:3px solid var(--salmon);">
+        <p style="font-size:10px;font-weight:800;color:var(--salmon);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Resposta da vendedora:</p>
+        <p>${n.resposta}</p>
+      </div>`:''}
+      <p style="font-size:11px;color:#bbb;margin-top:8px;">${new Date(n.date).toLocaleString('pt-BR')}</p>
+    </div>`).join('');
+
+  // Marcar todas como lidas ao abrir
+  setTimeout(async()=>{ try{ await Notificacoes.marcarTodasLidas(); }catch(e){} }, 2000);
+}
+
+function markNotifRead(i){
+  const user = JSON.parse(localStorage.getItem('catiase_loggedUser')||'null');
+  if(!user) return;
+  const key = 'notif_'+user.email;
+  const all = JSON.parse(localStorage.getItem(key)||'[]');
+  if(all[i]) all[i].read=true;
+  localStorage.setItem(key, JSON.stringify(all));
+}
+}
+
+// ── ALTERAR SENHA ──
+function saveSenha(){
+  const atual   = document.getElementById('senhaAtual').value;
+  const nova    = document.getElementById('senhaNova').value;
+  const confirm = document.getElementById('senhaConfirm').value;
+  const errEl   = document.getElementById('senhaError');
+  const errMsg  = document.getElementById('senhaErrorMsg');
+  const sucEl   = document.getElementById('senhaSuccess');
+  errEl.classList.remove('show'); sucEl.classList.remove('show');
+
+  const users = JSON.parse(localStorage.getItem('catiase_users')||'[]');
+  const idx   = users.findIndex(u=>u.email===loggedUser.email);
+  if(users[idx].senha !== atual){ errMsg.textContent='Senha atual incorreta.'; errEl.classList.add('show'); return; }
+  if(nova.length < 6){ errMsg.textContent='A nova senha deve ter pelo menos 6 caracteres.'; errEl.classList.add('show'); return; }
+  if(nova !== confirm){ errMsg.textContent='As senhas não coincidem.'; errEl.classList.add('show'); return; }
+
+  users[idx].senha = nova;
+  localStorage.setItem('catiase_users', JSON.stringify(users));
+  document.getElementById('senhaAtual').value='';
+  document.getElementById('senhaNova').value='';
+  document.getElementById('senhaConfirm').value='';
+  sucEl.classList.add('show');
+  setTimeout(()=>sucEl.classList.remove('show'), 3000);
+}
+
+// ── ENDEREÇOS ──
+function renderAddresses(enderecos){
+  const el = document.getElementById('addressList');
+  if(!enderecos.length){ el.innerHTML='<p style="font-size:13px;color:#aaa;margin-bottom:16px;">Nenhum endereço cadastrado.</p>'; return; }
+  el.innerHTML = enderecos.map((e,i)=>`
+    <div class="address-card">
+      <div>
+        <p><strong>${e.rua}, ${e.num}${e.comp?' — '+e.comp:''}</strong></p>
+        <p>${e.bairro} · ${e.cidade} / ${e.estado} · CEP ${e.cep}</p>
+      </div>
+      <button onclick="removeAddress(${i})" style="background:none;border:none;cursor:pointer;color:#ccc;transition:color .2s;" onmouseover="this.style.color='#e53935'" onmouseout="this.style.color='#ccc'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+function saveEndereco(){
+  const cep    = document.getElementById('endCep').value.trim();
+  const rua    = document.getElementById('endRua').value.trim();
+  const num    = document.getElementById('endNum').value.trim();
+  const bairro = document.getElementById('endBairro').value.trim();
+  const cidade = document.getElementById('endCidade').value.trim();
+  const estado = document.getElementById('endEstado').value.trim();
+  const comp   = document.getElementById('endComp').value.trim();
+  if(!rua||!num||!cidade||!estado){alert('Preencha os campos obrigatórios.');return;}
+  const users = JSON.parse(localStorage.getItem('catiase_users')||'[]');
+  const idx   = users.findIndex(u=>u.email===loggedUser.email);
+  if(!users[idx].enderecos) users[idx].enderecos=[];
+  users[idx].enderecos.push({cep,rua,num,bairro,cidade,estado,comp});
+  localStorage.setItem('catiase_users', JSON.stringify(users));
+  renderAddresses(users[idx].enderecos);
+  ['endCep','endRua','endNum','endBairro','endCidade','endEstado','endComp'].forEach(id=>document.getElementById(id).value='');
+  const s=document.getElementById('endSuccess'); s.classList.add('show');
+  setTimeout(()=>s.classList.remove('show'),3000);
+}
+
+function removeAddress(i){
+  const users = JSON.parse(localStorage.getItem('catiase_users')||'[]');
+  const idx   = users.findIndex(u=>u.email===loggedUser.email);
+  users[idx].enderecos.splice(i,1);
+  localStorage.setItem('catiase_users', JSON.stringify(users));
+  renderAddresses(users[idx].enderecos);
+}
+
+async function buscaCep(){
+  const cep = document.getElementById('endCep').value.replace(/\D/g,'');
+  if(cep.length<8){alert('CEP inválido.');return;}
+  try{
+    const r = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const d = await r.json();
+    if(d.erro){alert('CEP não encontrado.');return;}
+    document.getElementById('endRua').value    = d.logradouro||'';
+    document.getElementById('endBairro').value = d.bairro||'';
+    document.getElementById('endCidade').value = d.localidade||'';
+    document.getElementById('endEstado').value = d.uf||'';
+  }catch(e){alert('Erro ao buscar CEP.');}
+}
+
+// ── LOGOUT ──
+function doLogout(){
+  if(!confirm('Deseja sair da sua conta?')) return;
+  Auth.signOut();
+}
+
+// ── MASKS ──
+function maskCpf(el){
+  let v=el.value.replace(/\D/g,'');
+  v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  el.value=v;
+}
+function maskCep(el){
+  el.value=el.value.replace(/\D/g,'').replace(/(\d{5})(\d)/,'$1-$2').slice(0,9);
+}
+
+loadUser();
+loadNotifs();
+
+async function loadNotifs(){
+  try{
+    const notifs = await Notificacoes.listar();
+    const unread = notifs ? notifs.filter(n=>!n.lida).length : 0;
+
+  // Badge sidebar
+  const badge = document.getElementById('notifSideBadge');
+  if(badge){
+    badge.style.display = unread>0 ? 'inline-block' : 'none';
+    badge.textContent=unread; }
+  }
+
+  // Renderizar lista
+  const el = document.getElementById('notifList');
+  if(!el) return;
+  if(!notifs.length){
+    el.innerHTML=`<div style="text-align:center;padding:48px 24px;color:#aaa;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 12px;opacity:.3;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <p style="font-size:14px;font-weight:600;">Nenhuma notificação ainda</p>
+      <p style="font-size:13px;margin-top:4px;">Quando a vendedora responder suas perguntas, você verá aqui.</p>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = (notifs||[]).map((n,i)=>`
+    <div style="border:1.5px solid ${n.lida?'#f0f0f0':'var(--salmon)'};border-radius:12px;padding:16px 18px;margin-bottom:12px;background:${n.lida?'#fff':'#fff8f6'};cursor:pointer;" onclick="markNotifRead(${i})">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <p style="font-size:13px;font-weight:700;color:${n.lida?'#555':'var(--salmon)'};">${n.msg}</p>
+        ${!n.lida?'<span style="background:var(--salmon);color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;">NOVA</span>':''}
+      </div>
+      ${n.reply?`<div style="background:#f8f8f8;border-radius:8px;padding:10px 14px;margin-top:8px;font-size:13px;color:#555;border-left:3px solid var(--salmon);">
+        <p style="font-size:10px;font-weight:800;color:var(--salmon);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Resposta da vendedora:</p>
+        <p>${n.resposta}</p>
+      </div>`:''}
+      <p style="font-size:11px;color:#bbb;margin-top:8px;">${new Date(n.date).toLocaleString('pt-BR')}</p>
+    </div>`).join('');
+
+  // Marcar todas como lidas ao abrir
+  setTimeout(async()=>{ try{ await Notificacoes.marcarTodasLidas(); }catch(e){} }, 2000);
+}
+
+function markNotifRead(i){
+  const user = JSON.parse(localStorage.getItem('catiase_loggedUser')||'null');
+  if(!user) return;
+  const key = 'notif_'+user.email;
+  const all = JSON.parse(localStorage.getItem(key)||'[]');
+  if(all[i]) all[i].read=true;
+  localStorage.setItem(key, JSON.stringify(all));
+}
+</script>
+</body>
+</html>

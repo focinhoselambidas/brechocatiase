@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Catia-se Brechó | Moda com Estilo e Consciência</title>
+<meta name="description" content="Catia-se Brechó Online — Peças femininas, masculinas, infantis, acessórios e calçados com preço justo. Pagamos seus desapegos à vista!"/>
+<script src="supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;
+  --gold-light:#e8c96a;
+  --salmon:#E8735A;
+  --salmon-dark:#C45A43;
+  --black:#111;
+  --dark:#1a1a1a;
+  --dark2:#222;
+  --dark3:#2a2a2a;
+  --gray:#888;
+  --gray-light:#f5f5f5;
+  --white:#fff;
+  --font:'Poppins',sans-serif;
+  --radius:10px;
+}
+body{font-family:var(--font);color:var(--dark);background:#f8f8f8;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+ul{list-style:none;}
+button{font-family:var(--font);cursor:pointer;border:none;outline:none;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--black);color:#aaa;text-align:center;padding:7px 16px;font-size:12px;letter-spacing:1px;}
+.topbar a{color:var(--salmon);font-weight:600;}
+
+/* ── HEADER ── */
+.header{background:#000;position:sticky;top:0;z-index:1000;box-shadow:0 4px 24px rgba(0,0,0,.7);}
+.header__inner{max-width:1400px;margin:0 auto;padding:0 32px;display:flex;align-items:center;gap:24px;}
+
+/* Logo */
+.logo{flex-shrink:0;position:relative;}
+.logo a{display:block;position:relative;}
+.logo-img{
+  height:130px;
+  width:auto;
+  max-width:520px;
+  display:block;
+  object-fit:contain;
+  object-position:left center;
+  transition:transform .3s;
+}
+.logo a:hover .logo-img{transform:scale(1.02);}
+.logo-fade{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(to right, #000 0%, transparent 8%, transparent 92%, #000 100%),
+    linear-gradient(to bottom, #000 0%, transparent 15%, transparent 85%, #000 100%);
+}
+
+/* Search */
+.search{flex:1;max-width:560px;margin:0 auto;}
+.search__form{display:flex;background:#1e1e1e;border:1.5px solid #2a2a2a;border-radius:50px;overflow:hidden;transition:border-color .2s;}
+.search__form:focus-within{border-color:var(--gold);}
+.search__input{flex:1;border:none;outline:none;padding:13px 22px;font-family:var(--font);font-size:14px;color:#fff;background:transparent;}
+.search__input::placeholder{color:#555;}
+.search__btn{background:var(--salmon);border:none;padding:13px 22px;cursor:pointer;border-radius:0 50px 50px 0;transition:background .2s;display:flex;align-items:center;}
+.search__btn:hover{background:var(--salmon-dark);}
+.search__btn svg{stroke:#fff;}
+
+
+
+
+
+
+
+
+
+
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;font-family:var(--font);font-size:13px;font-weight:700;border-radius:50px;letter-spacing:.5px;text-transform:uppercase;transition:transform .2s,box-shadow .2s,background .2s;text-decoration:none;border:none;cursor:pointer;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.btn-salmon{background:var(--salmon);color:#fff;}
+.btn-salmon:hover{background:var(--salmon-dark);}
+
+
+.btn-outline{background:transparent;color:#fff;border:2px solid #fff;}
+.btn-sm{padding:9px 18px;font-size:12px;}
+
+
+
+
+
+
+
+
+
+/* ── SECTION LAYOUT ── */
+.section{padding:40px 0;}
+.section--gray{background:var(--gray-light);}
+.section--white{background:#fff;}
+.container{max-width:1400px;margin:0 auto;padding:0 32px;}
+.section__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.section__title{font-size:20px;font-weight:800;color:var(--dark);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:10px;}
+.section__title::before{content:'';width:4px;height:22px;background:var(--salmon);border-radius:2px;display:block;}
+.section__link{font-size:13px;font-weight:600;color:var(--salmon);border-bottom:1.5px solid var(--salmon);padding-bottom:2px;}
+
+/* ── PRODUCT GRID ── */
+.product-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;}
+.product-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);transition:box-shadow .25s,transform .25s;cursor:pointer;}
+.product-card:hover{box-shadow:0 10px 32px rgba(0,0,0,.14);transform:translateY(-4px);}
+.product-card__img{position:relative;aspect-ratio:3/4;background:#f0f0f0;overflow:hidden;}
+.product-card__img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.product-card:hover .product-card__img img{transform:scale(1.05);}
+.product-card__placeholder{width:100%;height:100%;background:linear-gradient(135deg,#f5e6e0,#ead5cc);display:flex;align-items:center;justify-content:center;}
+.product-card__badges{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;}
+.badge{font-size:9px;font-weight:700;padding:3px 9px;border-radius:4px;color:#fff;width:fit-content;}
+.badge--new{background:var(--salmon);}
+.badge--dest{background:#333;}
+.badge--sale{background:#e53935;}
+.product-card__wish{position:absolute;top:8px;right:8px;width:30px;height:30px;background:rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;cursor:pointer;border:none;}
+.product-card:hover .product-card__wish{opacity:1;}
+.product-card__wish svg{color:var(--salmon);}
+.product-card__body{padding:12px 14px 14px;}
+.product-card__brand{font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.product-card__name{font-size:13px;color:#555;margin-bottom:8px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.product-card__price{font-size:18px;font-weight:800;color:var(--dark);}
+.product-card__old{font-size:11px;color:#aaa;text-decoration:line-through;margin-bottom:2px;}
+.product-card__btn{display:block;width:100%;margin-top:10px;padding:9px;background:var(--dark);color:#fff;font-size:12px;font-weight:700;border-radius:8px;text-align:center;border:none;cursor:pointer;transition:background .2s;}
+.product-card__btn:hover{background:var(--salmon);}
+
+/* ── CATEGORIES SHORTCUT ── */
+.cat-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:14px;}
+.cat-card{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:transform .2s;}
+.cat-card:hover{transform:translateY(-4px);}
+.cat-card__icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 4px 12px rgba(0,0,0,.12);}
+.cat-card__label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--dark);text-align:center;}
+.c1{background:linear-gradient(135deg,#ff8a65,#e64a19);}
+.c2{background:linear-gradient(135deg,#C9A84C,#8a6914);}
+.c3{background:linear-gradient(135deg,#42a5f5,#1565c0);}
+.c4{background:linear-gradient(135deg,#f48fb1,#c2185b);}
+.c5{background:linear-gradient(135deg,#90caf9,#1976d2);}
+.c6{background:linear-gradient(135deg,#a5d6a7,#388e3c);}
+.c7{background:linear-gradient(135deg,#ffe082,#f57f17);}
+.c8{background:linear-gradient(135deg,#ef9a9a,#c62828);}
+
+/* ── MODAL PRODUTO ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:16px;max-width:960px;width:100%;max-height:92vh;overflow-y:auto;position:relative;animation:modalIn .3s ease;}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal__close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:#f5f5f5;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .2s;}
+.modal__close:hover{background:#eee;}
+.modal__inner{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.modal__gallery{background:#f8f8f8;border-radius:16px 0 0 16px;padding:24px;display:flex;flex-direction:column;gap:12px;}
+.modal__main-img{aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:#eee;}
+.modal__main-img img{width:100%;height:100%;object-fit:cover;}
+.modal__thumbs{display:flex;gap:8px;}
+.modal__thumb{width:60px;height:60px;border-radius:8px;overflow:hidden;border:2px solid transparent;cursor:pointer;flex-shrink:0;}
+.modal__thumb.active,.modal__thumb:hover{border-color:var(--salmon);}
+.modal__thumb img{width:100%;height:100%;object-fit:cover;}
+.modal__info{padding:32px 28px;display:flex;flex-direction:column;gap:14px;}
+.modal__brand{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;}
+.modal__title{font-size:22px;font-weight:800;color:var(--dark);line-height:1.3;}
+.modal__meta{display:flex;gap:10px;flex-wrap:wrap;}
+.meta-tag{background:#f5f5f5;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;color:#555;}
+.modal__price-block{background:var(--gray-light);border-radius:10px;padding:16px;}
+.modal__old-price{font-size:13px;color:#aaa;text-decoration:line-through;margin-bottom:4px;}
+.modal__price{font-size:32px;font-weight:800;color:var(--dark);}
+.modal__installments{font-size:12px;color:var(--gray);margin-top:4px;}
+.modal__actions{display:flex;flex-direction:column;gap:10px;}
+.modal__actions .btn{justify-content:center;}
+.btn-dark{background:var(--dark);color:#fff;}
+.btn-dark:hover{background:#333;}
+.btn-outline-dark{background:transparent;color:var(--dark);border:2px solid var(--dark);}
+.btn-outline-dark:hover{background:var(--dark);color:#fff;}
+.btn-whats{background:#25D366;color:#fff;}
+.btn-whats:hover{background:#1ebe5d;}
+
+/* Frete calc */
+.frete-calc{border:1.5px solid #eee;border-radius:10px;padding:14px;}
+.frete-calc__title{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.frete-calc__form{display:flex;gap:8px;}
+.frete-input{flex:1;border:1.5px solid #ddd;border-radius:8px;padding:9px 14px;font-family:var(--font);font-size:13px;outline:none;transition:border-color .2s;}
+.frete-input:focus{border-color:var(--salmon);}
+.frete-btn{padding:9px 16px;background:var(--salmon);color:#fff;border:none;border-radius:8px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;}
+.frete-result{margin-top:10px;font-size:12px;color:var(--gray);display:none;}
+.frete-result.show{display:block;}
+
+
+
+/* ── FOOTER LINKS ── */
+.footer-links{background:#fff;border-top:1px solid #eee;border-bottom:1px solid #eee;}
+.footer-links__inner{max-width:1400px;margin:0 auto;padding:18px 32px;display:flex;justify-content:center;gap:40px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;font-weight:500;color:#666;transition:color .2s;}
+.footer-links a:hover{color:var(--salmon);}
+
+/* ── FOOTER ── */
+.footer{background:var(--black);color:#888;padding:40px 0 20px;}
+.footer__inner{max-width:1400px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.5fr 1.5fr 1fr 1fr;gap:40px;}
+.footer__title{font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;text-transform:uppercase;letter-spacing:.8px;}
+.footer__contact{display:flex;align-items:center;gap:10px;font-size:13px;margin-bottom:10px;color:#888;}
+.footer__contact svg{color:var(--salmon);flex-shrink:0;}
+.footer__contact a:hover{color:var(--salmon);}
+.pay-icons{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.pay-icon{background:#1e1e1e;border-radius:6px;padding:5px 10px;font-size:10px;font-weight:700;color:#ccc;}
+.social-row{display:flex;flex-direction:column;gap:10px;}
+.social-btn{display:flex;align-items:center;gap:10px;background:#1e1e1e;border-radius:8px;padding:9px 14px;font-size:12px;color:#ccc;transition:background .2s;}
+.social-btn:hover{background:var(--salmon);color:#fff;}
+.social-btn svg{flex-shrink:0;}
+.footer__bottom{border-top:1px solid #222;margin-top:32px;padding-top:18px;text-align:center;font-size:11px;color:#444;}
+
+/* ── WHATSAPP FLOAT ── */
+
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){.product-grid{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:900px){
+  .product-grid{grid-template-columns:repeat(3,1fr);}
+  .cat-grid{grid-template-columns:repeat(4,1fr);}
+  .footer__inner{grid-template-columns:1fr 1fr;}
+  .modal__inner{grid-template-columns:1fr;}
+  .modal__gallery{border-radius:16px 16px 0 0;}
+  
+}
+@media(max-width:600px){
+  .product-grid{grid-template-columns:repeat(2,1fr);}
+  .cat-grid{grid-template-columns:repeat(4,1fr);}
+  
+  .reviews-grid{grid-template-columns:1fr;}
+  .header__inner{flex-wrap:wrap;padding:10px 16px;gap:10px;}
+  .search{order:3;max-width:100%;width:100%;}
+}
+
+    .h-action{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:#aaa;padding:10px 14px;border-radius:10px;transition:background .2s,color .2s;text-decoration:none;position:relative;}
+    .h-action svg{color:#ccc;transition:color .2s;}
+    .h-action:hover{background:#1e1e1e;color:var(--gold);}
+    .h-action:hover svg{color:var(--gold);}
+
+    /* Grade 6 colunas */
+    .product-grid-6{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;}
+    @media(max-width:1200px){.product-grid-6{grid-template-columns:repeat(4,1fr);}}
+    @media(max-width:900px){.product-grid-6{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:600px){.product-grid-6{grid-template-columns:repeat(2,1fr);}}
+
+    /* Filtros rápidos */
+    .qf-btn{padding:7px 16px;border-radius:20px;border:1.5px solid #e0e0e0;background:#fff;font-family:inherit;font-size:12px;font-weight:600;color:#555;cursor:pointer;transition:all .2s;white-space:nowrap;}
+    .qf-btn:hover,.qf-btn.active{background:var(--salmon);color:#fff;border-color:var(--salmon);}
+</style>
+</head>
+<body>
+
+
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header__inner">
+    <!-- Logo -->
+    <div class="logo">
+      <a href="index.html">
+        <img src="logo.png" alt="Catia-se Brechó" class="logo-img"/>
+        <div class="logo-fade"></div>
+      </a>
+    </div>
+
+    <!-- Busca -->
+    <div class="search">
+      <form class="search__form" onsubmit="return false;">
+        <input class="search__input" type="text" placeholder="Buscar peças, marcas, categorias..."/>
+        <button class="search__btn" type="submit" aria-label="Buscar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </form>
+    </div>
+
+
+    <!-- Ações -->
+    <div style="display:flex;align-items:center;gap:4px;margin-left:auto;flex-shrink:0;">
+      <a href="cadastro.html" class="h-action">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Cadastro</span>
+      </a>
+      <a id="loginBtn" href="cadastro.html" class="h-action">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        <span id="loginLabel">Entrar</span>
+      </a>
+      <a href="carrinho.html" class="h-action" style="position:relative;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span>Carrinho</span>
+        <span id="cartBadge" style="position:absolute;top:4px;right:6px;background:#E8735A;color:#fff;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+
+
+<!-- ATALHOS DE CATEGORIAS -->
+<section class="section section--white">
+  <div class="container">
+    <div class="section__head">
+      <h2 class="section__title">Categorias</h2>
+    </div>
+    <div class="cat-grid">
+      <a href="categoria.html?cat=promocao" class="cat-card">
+        <div class="cat-card__icon c1"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+        <span class="cat-card__label">Promoção</span>
+      </a>
+      <a href="categoria.html?cat=grife" class="cat-card">
+        <div class="cat-card__icon c2"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <span class="cat-card__label">Grife</span>
+      </a>
+      <a href="categoria.html?cat=novidades" class="cat-card">
+        <div class="cat-card__icon c3"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+        <span class="cat-card__label">Novidades</span>
+      </a>
+      <a href="categoria.html?cat=feminino" class="cat-card">
+        <div class="cat-card__icon c4"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg></div>
+        <span class="cat-card__label">Feminino</span>
+      </a>
+      <a href="categoria.html?cat=masculino" class="cat-card">
+        <div class="cat-card__icon c5"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg></div>
+        <span class="cat-card__label">Masculino</span>
+      </a>
+      <a href="categoria.html?cat=infantil" class="cat-card">
+        <div class="cat-card__icon c6"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+        <span class="cat-card__label">Infantil</span>
+      </a>
+      <a href="categoria.html?cat=acessorios" class="cat-card">
+        <div class="cat-card__icon c7"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="10"/></svg></div>
+        <span class="cat-card__label">Acessórios</span>
+      </a>
+      <a href="categoria.html?cat=calcados" class="cat-card">
+        <div class="cat-card__icon c8"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M2 18l4-8 4 3 4-7 4 12H2z"/></svg></div>
+        <span class="cat-card__label">Calçados</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TODOS OS PRODUTOS -->
+<section class="section section--gray" id="produtos">
+  <div class="container">
+    <div class="section__head">
+      <h2 class="section__title">Produtos</h2>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span id="prodCount" style="font-size:13px;color:var(--gray);"></span>
+        <select id="sortSelect" onchange="renderAllProducts()" style="border:1.5px solid #e0e0e0;border-radius:8px;padding:7px 14px;font-family:inherit;font-size:13px;outline:none;color:#555;cursor:pointer;">
+          <option value="recent">Mais recentes</option>
+          <option value="price_asc">Menor preço</option>
+          <option value="price_desc">Maior preço</option>
+        </select>
+      </div>
+    </div>
+    <!-- Filtros rápidos -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;" id="quickFilters">
+      <button class="qf-btn active" onclick="setFilter('',this)">Todos</button>
+      <button class="qf-btn" onclick="setFilter('dest',this)">⭐ Destaques</button>
+      <button class="qf-btn" onclick="setFilter('sale',this)">🔥 Promoções</button>
+      <button class="qf-btn" onclick="setFilter('Feminino',this)">👗 Feminino</button>
+      <button class="qf-btn" onclick="setFilter('Masculino',this)">👔 Masculino</button>
+      <button class="qf-btn" onclick="setFilter('Infantil',this)">🧸 Infantil</button>
+      <button class="qf-btn" onclick="setFilter('Acessórios',this)">👜 Acessórios</button>
+      <button class="qf-btn" onclick="setFilter('Calçados',this)">👠 Calçados</button>
+      <button class="qf-btn" onclick="setFilter('Grife',this)">💎 Grife</button>
+    </div>
+    <div class="product-grid-6" id="productGrid"></div>
+    <div id="emptyState" style="display:none;text-align:center;padding:60px 24px;color:#aaa;">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin:0 auto 16px;opacity:.3;"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">Nenhum produto encontrado</h3>
+      <p style="font-size:14px;">Tente outro filtro ou volte mais tarde.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER LINKS -->
+<div class="footer-links">
+  <div class="footer-links__inner">
+    <a href="quem-somos.html">Quem Somos</a>
+    <a href="compra-segura.html">Compra Segura</a>
+    <a href="fale-conosco.html">Fale Conosco</a>
+    <a href="como-comprar.html">Como Comprar</a>
+    <a href="privacidade.html">Política de Privacidade</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div>
+      <p class="footer__title">Contato</p>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <!-- Link para formulário de mensagem -->
+        <a href="#" onclick="document.getElementById('contactModal').classList.add('open');return false;"
+           style="display:flex;align-items:center;gap:12px;background:#1e1e1e;border-radius:10px;padding:12px 16px;transition:background .2s;"
+           onmouseover="this.style.background='#2a2a2a'" onmouseout="this.style.background='#1e1e1e'">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--salmon);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div>
+            <p style="font-size:13px;font-weight:700;color:#fff;">Enviar Mensagem</p>
+            <p style="font-size:11px;color:#888;">Fale com a vendedora</p>
+          </div>
+        </a>
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/catiaselooksestilos" target="_blank"
+           style="display:flex;align-items:center;gap:12px;background:#1e1e1e;border-radius:10px;padding:12px 16px;transition:background .2s;"
+           onmouseover="this.style.background='#833ab4'" onmouseout="this.style.background='#1e1e1e'">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </div>
+          <div>
+            <p style="font-size:13px;font-weight:700;color:#fff;">@catiaselooksestilos</p>
+            <p style="font-size:11px;color:#888;">Siga no Instagram</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div>
+      <p class="footer__title">Pagamento & Envio</p>
+      <p style="font-size:12px;color:#666;margin-bottom:10px;">Pagamento seguro via Mercado Pago</p>
+      <div class="pay-icons">
+        <span class="pay-icon" style="background:#00b1eb;color:#fff;">PIX</span>
+        <span class="pay-icon" style="background:#1a1f71;color:#fff;">VISA</span>
+        <span class="pay-icon" style="background:#eb001b;color:#fff;">MASTER</span>
+        <span class="pay-icon" style="background:#016FD0;color:#fff;">AMEX</span>
+        <span class="pay-icon" style="background:#ffcb05;color:#333;">ELO</span>
+      </div>
+      <p style="font-size:12px;color:#666;margin-top:16px;margin-bottom:8px;">Envios via Mercado Envios</p>
+      <div style="display:flex;align-items:center;gap:8px;background:#1e1e1e;border-radius:8px;padding:8px 12px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00AEEF" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <span style="font-size:12px;color:#fff;font-weight:600;">Mercado Envios</span>
+      </div>
+    </div>
+    <div>
+      <p class="footer__title">Segurança</p>
+      <div style="background:#1e1e1e;border-radius:10px;padding:14px;display:flex;align-items:center;gap:10px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--salmon)" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span style="font-size:11px;color:#bbb;line-height:1.4;">Loja Protegida<br><small>Compra 100% segura</small></span>
+      </div>
+    </div>
+    <div>
+      <p class="footer__title">Siga-nos</p>
+      <div class="social-row">
+        <a href="https://www.instagram.com/catiaselooksestilos" target="_blank" class="social-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          @catiaselooksestilos
+        </a>
+        <a href="https://www.tiktok.com/@catiaselooksestilos" target="_blank" class="social-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+          @catiaselooksestilos
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    © 2026 Catia-se Brechó Online · Moda · Estilo · Consciência ·  · 
+  </div>
+</footer>
+
+
+<!-- MODAL PRODUTO -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <button class="modal__close" onclick="closeModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal__inner">
+      <!-- Galeria -->
+      <div class="modal__gallery">
+        <div class="modal__main-img">
+          <div id="modalMainImg" style="width:100%;height:100%;background:linear-gradient(135deg,#f5e6e0,#ead5cc);display:flex;align-items:center;justify-content:center;">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>
+          </div>
+        </div>
+        <div class="modal__thumbs" id="modalThumbs"></div>
+      </div>
+      <!-- Informações -->
+      <div class="modal__info">
+        <p class="modal__brand" id="modalBrand">MARCA</p>
+        <h2 class="modal__title" id="modalTitle">Nome do Produto</h2>
+        <div class="modal__meta">
+          <span class="meta-tag" id="modalSize">Tamanho: M</span>
+          <span class="meta-tag" id="modalCondition">Estado: Ótimo</span>
+          <span class="meta-tag" id="modalCategory">Categoria</span>
+        </div>
+        <div class="modal__price-block">
+          <p class="modal__old-price" id="modalOldPrice" style="display:none">De R$ 0,00</p>
+          <p class="modal__price" id="modalPrice">R$ 0,00</p>
+          <p class="modal__installments">ou 6x de <span id="modalInstall">R$ 0,00</span> sem juros</p>
+        </div>
+        <!-- Calcular Frete -->
+        <div class="frete-calc">
+          <p class="frete-calc__title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Calcular Frete
+          </p>
+          <div class="frete-calc__form">
+            <input class="frete-input" type="text" id="cepInput" placeholder="Digite seu CEP" maxlength="9"/>
+            <button class="frete-btn" onclick="calcFrete()">Calcular</button>
+          </div>
+          <div class="frete-result" id="freteResult"></div>
+        </div>
+        <!-- Ações -->
+        <div class="modal__actions">
+          <button class="btn btn-salmon" onclick="addToCart()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Adicionar ao Carrinho
+          </button>
+          <button class="btn btn-gold" style="color:#111;" onclick="buyNow()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/></svg>
+            Comprar Agora
+          </button>
+          <button class="btn btn-outline-dark" onclick="toggleAskForm()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Perguntar ao Vendedor
+          </button>
+          <!-- Formulário de pergunta -->
+          <div id="askForm" style="display:none;background:#f8f8f8;border-radius:10px;padding:16px;margin-top:4px;">
+            <p style="font-size:12px;font-weight:700;color:#333;margin-bottom:10px;">✉️ Enviar pergunta sobre este produto</p>
+            <input id="askName" type="text" placeholder="Seu nome" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:9px 12px;font-family:inherit;font-size:13px;margin-bottom:8px;outline:none;">
+            <input id="askEmail" type="email" placeholder="Seu e-mail (para receber a resposta)" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:9px 12px;font-family:inherit;font-size:13px;margin-bottom:8px;outline:none;">
+            <textarea id="askMsg" placeholder="Qual sua dúvida sobre este produto?" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:9px 12px;font-family:inherit;font-size:13px;min-height:80px;resize:vertical;outline:none;margin-bottom:8px;"></textarea>
+            <button onclick="submitAsk()" style="width:100%;padding:10px;background:var(--salmon);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;">Enviar Pergunta</button>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#bbb;text-align:center;">🔒 Pagamento seguro · Entrega via Mercado Envios</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DADOS DE EXEMPLO (substitua pelos seus produtos reais) ──
+const products = [
+  {id:1,brand:'Le Lis Blanc',name:'Vestido Longo Midi - G',category:'Feminino',size:'G',condition:'Ótimo',price:149,oldPrice:320,badge:'new'},
+  {id:2,brand:'Farm',name:'Blusa Cropped Estampada - P',category:'Feminino',size:'P',condition:'Excelente',price:89,oldPrice:199,badge:'dest'},
+  {id:3,brand:'Ellus',name:'Jaqueta Jeans - M',category:'Feminino',size:'M',condition:'Ótimo',price:219,badge:'new'},
+  {id:4,brand:'Lolitta',name:'Cropped Tricot - P',category:'Feminino',size:'P',condition:'Ótimo',price:167,badge:'dest'},
+  {id:5,brand:'Sem Marca',name:'Body Básico - PP',category:'Feminino',size:'PP',condition:'Bom',price:35,badge:'sale'},
+  {id:6,brand:'Nati Vozza',name:'Cropped Malha - P',category:'Feminino',size:'P',condition:'Excelente',price:130,badge:'new'},
+  {id:7,brand:'Baw',name:'Camiseta Streetwear - GG',category:'Masculino',size:'GG',condition:'Ótimo',price:71,badge:'dest'},
+  {id:8,brand:'Collection',name:'Camisa Manga Longa - M',category:'Feminino',size:'M',condition:'Excelente',price:119,badge:'new'},
+  {id:9,brand:'Farm',name:'Vestido Midi Estampado - M',category:'Feminino',size:'M',condition:'Ótimo',price:159,oldPrice:380,badge:'dest'},
+  {id:10,brand:'Norah',name:'Blusa Manga Curta - PP',category:'Feminino',size:'PP',condition:'Bom',price:59,badge:'new'},
+];
+
+const highlights = [
+  {id:11,brand:'Le Lis Blanc',name:'Blazer Alfaiataria - M',category:'Feminino',size:'M',condition:'Excelente',price:280,oldPrice:650,badge:'dest'},
+  {id:12,brand:'Ellus',name:'Calça Wide Leg - 38',category:'Feminino',size:'38',condition:'Ótimo',price:195,badge:'dest'},
+  {id:13,brand:'Farm',name:'Conjunto Linho - P',category:'Feminino',size:'P',condition:'Excelente',price:230,oldPrice:520,badge:'sale'},
+  {id:14,brand:'Animale',name:'Vestido Festa - M',category:'Feminino',size:'M',condition:'Excelente',price:310,badge:'dest'},
+  {id:15,brand:'Lolitta',name:'Saia Midi Plissada - P',category:'Feminino',size:'P',condition:'Ótimo',price:145,badge:'new'},
+];
+
+function badgeLabel(b){return b==='new'?'Novidade':b==='dest'?'Destaque':'Promoção';}
+function badgeClass(b){return b==='new'?'badge--new':b==='dest'?'badge--dest':'badge--sale';}
+
+function buildCard(raw){
+  const p = normProd ? normProd(raw) : raw;
+  const install = (p.price/6).toFixed(2).replace('.',',');
+  return `
+  <div class="product-card" onclick="openModal(${p.id})">
+    <div class="product-card__img">
+      <div class="product-card__placeholder">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>
+      </div>
+      <div class="product-card__badges">
+        <span class="badge ${badgeClass(p.badge)}">${badgeLabel(p.badge)}</span>
+      </div>
+      <button class="product-card__wish" onclick="event.stopPropagation();" title="Favoritar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+    </div>
+    <div class="product-card__body">
+      <p class="product-card__brand">${p.brand}</p>
+      <p class="product-card__name">${p.name}</p>
+      ${p.oldPrice?`<p class="product-card__old">De R$ ${p.oldPrice.toFixed(2).replace('.',',')}</p>`:''}
+      <p class="product-card__price">R$ ${p.price.toFixed(2).replace('.',',')}</p>
+      <button class="product-card__btn">Ver Produto</button>
+    </div>
+  </div>`;
+}
+
+// ── SISTEMA DE PRODUTOS SUPABASE ──
+let activeFilter = '';
+
+function setFilter(filter, btn){
+  activeFilter = filter;
+  document.querySelectorAll('.qf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAllProducts();
+}
+
+async function renderAllProducts(){
+  const sort  = document.getElementById('sortSelect')?.value || 'recent';
+  const grid  = document.getElementById('productGrid');
+  const empty = document.getElementById('emptyState');
+  const count = document.getElementById('prodCount');
+
+  // Loading
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa;"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin .8s linear infinite;margin:0 auto 10px;display:block;"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>Carregando produtos...</div>';
+
+  try{
+    let filtros = { ordem: sort };
+    if(activeFilter === 'new' || activeFilter === 'dest' || activeFilter === 'sale')
+      filtros.destaque = activeFilter;
+    else if(activeFilter)
+      filtros.categoria = activeFilter;
+
+    let list = await Produtos.listar(filtros);
+
+    // Fallback para produtos de exemplo
+    if(!list || !list.length){
+      list = [...products, ...highlights].map(p=>({
+        id: p.id, nome: p.name, marca: p.brand, categoria: p.category,
+        tamanho: p.size, estado: p.condition, preco: p.price,
+        preco_original: p.oldPrice, destaque: p.badge,
+        imagens: p.images||[], descricao: p.description||''
+      }));
+    }
+
+    if(count) count.textContent = list.length + (list.length===1?' produto':' produtos');
+    if(!list.length){ grid.innerHTML=''; if(empty) empty.style.display='block'; return; }
+    if(empty) empty.style.display='none';
+    grid.innerHTML = list.map(p => buildCard(p)).join('');
+  }catch(e){
+    console.error('Erro ao carregar produtos:', e);
+    // Fallback local
+    const list = [...products,...highlights];
+    grid.innerHTML = list.map(p=>buildCard(p)).join('');
+  }
+}
+
+// Normalizar produto (Supabase usa nomes diferentes)
+function normProd(p){
+  return {
+    id:          p.id,
+    name:        p.nome   || p.name,
+    brand:       p.marca  || p.brand,
+    category:    p.categoria || p.category,
+    size:        p.tamanho || p.size,
+    condition:   p.estado || p.condition,
+    price:       parseFloat(p.preco || p.price || 0),
+    oldPrice:    p.preco_original || p.oldPrice || null,
+    badge:       p.destaque || p.badge || 'new',
+    images:      p.imagens || p.images || [],
+    description: p.descricao || p.description || ''
+  };
+}
+
+// Inicializar
+renderAllProducts();
+
+// ── MODAL ──
+const allProducts = [...products, ...highlights];
+
+function openModal(id){
+  const p = allProducts.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('modalBrand').textContent = p.brand;
+  document.getElementById('modalTitle').textContent = p.name;
+  document.getElementById('modalSize').textContent = 'Tamanho: ' + p.size;
+  document.getElementById('modalCondition').textContent = 'Estado: ' + p.condition;
+  document.getElementById('modalCategory').textContent = p.category;
+  document.getElementById('modalPrice').textContent = 'R$ ' + p.price.toFixed(2).replace('.',',');
+  document.getElementById('modalInstall').textContent = 'R$ ' + (p.price/6).toFixed(2).replace('.',',');
+  const oldEl = document.getElementById('modalOldPrice');
+  if(p.oldPrice){ oldEl.style.display='block'; oldEl.textContent='De R$ '+p.oldPrice.toFixed(2).replace('.',','); }
+  else { oldEl.style.display='none'; }
+  // WhatsApp com nome do produto
+  document.querySelector('.btn-whats').href =
+    `https://api.whatsapp.com/send?phone=&text=Olá! Tenho interesse no produto: ${encodeURIComponent(p.name)} - R$ ${p.price.toFixed(2)}`;
+  document.getElementById('freteResult').classList.remove('show');
+  document.getElementById('cepInput').value = '';
+  document.getElementById('productModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  document.getElementById('productModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('productModal').addEventListener('click', function(e){
+  if(e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+function calcFrete(){
+  const cep = document.getElementById('cepInput').value.replace(/\D/g,'');
+  const res = document.getElementById('freteResult');
+  if(cep.length < 8){ res.innerHTML='<span style="color:red">CEP inválido.</span>'; res.classList.add('show'); return; }
+  res.innerHTML = '⏳ Calculando...'; res.classList.add('show');
+  setTimeout(()=>{
+    res.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;">
+        <div style="display:flex;justify-content:space-between;padding:7px 10px;background:#f5f5f5;border-radius:6px;font-size:12px;">
+          <span>📦 PAC</span><span><strong>R$ 18,90</strong> · 5-8 dias úteis</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:7px 10px;background:#f5f5f5;border-radius:6px;font-size:12px;">
+          <span>⚡ SEDEX</span><span><strong>R$ 32,50</strong> · 2-3 dias úteis</span>
+        </div>
+      </div>`;
+  }, 800);
+}
+
+function toggleAskForm(){
+  const f   = document.getElementById('askForm');
+  const user = getLoggedUser();
+  const show = f.style.display === 'none' || f.style.display === '';
+
+  if(show){
+    if(!user){
+      // Não logado: mostrar aviso
+      f.style.display='block';
+      f.innerHTML=`
+        <div style="text-align:center;padding:16px;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--salmon)" stroke-width="1.5" style="margin:0 auto 10px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <p style="font-size:13px;font-weight:700;color:#333;margin-bottom:6px;">Para fazer perguntas é necessário ter uma conta</p>
+          <p style="font-size:12px;color:#888;margin-bottom:14px;">Cadastre-se gratuitamente e fale com a vendedora!</p>
+          <div style="display:flex;gap:8px;justify-content:center;">
+            <a href="cadastro.html" onclick="localStorage.setItem('catiase_redirect',window.location.href);" style="padding:10px 20px;background:var(--salmon);color:#fff;border-radius:8px;font-size:13px;font-weight:700;">Criar conta grátis</a>
+            <a href="cadastro.html" onclick="localStorage.setItem('catiase_redirect',window.location.href);" style="padding:10px 20px;background:#f5f5f5;color:#555;border-radius:8px;font-size:13px;font-weight:700;">Já tenho conta</a>
+          </div>
+        </div>`;
+      return;
+    }
+    // Logado: mostrar form preenchido
+    f.style.display='block';
+    f.innerHTML=`
+      <p style="font-size:12px;font-weight:700;color:#333;margin-bottom:10px;">✉️ Enviar pergunta sobre este produto</p>
+      <div style="background:#fff0ed;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#555;display:flex;align-items:center;gap:8px;">
+        <span>👤</span><span>Enviando como <strong>${user.nome}</strong></span>
+      </div>
+      <textarea id="askMsg" placeholder="Qual sua dúvida sobre este produto?" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:9px 12px;font-family:inherit;font-size:13px;min-height:80px;resize:vertical;outline:none;margin-bottom:8px;"></textarea>
+      <button onclick="submitAsk()" style="width:100%;padding:10px;background:var(--salmon);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;">Enviar Pergunta</button>`;
+  } else {
+    f.style.display='none';
+  }
+}
+
+async function submitAsk(){
+  if(!isLogged()){ alert('Faça login para enviar perguntas.'); return; }
+  const profile = getUserProfile();
+  const user    = getLoggedUser();
+  const msg     = document.getElementById('askMsg')?.value.trim();
+  const prod    = document.getElementById('modalTitle').textContent;
+  if(!msg){ alert('Digite sua pergunta.'); return; }
+  try{
+    await Mensagens.enviar({
+      usuario_id:   user.id,
+      nome_cliente: profile.nome,
+      email_cliente: user.email,
+      produto_nome: prod,
+      mensagem:     msg,
+      status:       'new'
+    });
+    notifyAdminWhatsApp(profile.nome, prod, msg);
+    document.getElementById('askForm').style.display='none';
+    closeModal();
+    showIndexToast('✅ Pergunta enviada! Você será notificado quando houver resposta.');
+  }catch(e){
+    showIndexToast('❌ Erro ao enviar: '+e.message);
+  }
+}
+
+function notifyAdminWhatsApp(clientName, product, question){
+  const ADMIN_PHONE = '5524988114014'; // número da admin
+  const text = 
+    '🛍️ *Nova pergunta no Catia-se Brechó!*
+
+' +
+    '👤 *Cliente:* ' + clientName + '
+' +
+    '📦 *Produto:* ' + product + '
+' +
+    '💬 *Pergunta:* ' + question + '
+
+' +
+    '👉 Responda pelo painel: admin.html';
+  const url = 'https://wa.me/' + ADMIN_PHONE + '?text=' + encodeURIComponent(text);
+  // Abre numa aba invisível por 1 segundo (sem interromper o cliente)
+  const link = document.createElement('a');
+  link.href = url;
+  link.target = '_blank';
+  link.rel = 'noopener';
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(() => link.remove(), 1000);
+}
+
+function showIndexToast(html){
+  const n=document.createElement('div');
+  n.style.cssText='position:fixed;top:24px;right:24px;background:#1a1a1a;color:#fff;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3);max-width:360px;';
+  n.innerHTML=html; document.body.appendChild(n);
+  setTimeout(()=>n.remove(),4000);
+}
+
+function showLoginRequired(action){
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;';
+  overlay.innerHTML=`
+    <div style="background:#fff;border-radius:20px;padding:40px 36px;max-width:400px;width:100%;text-align:center;animation:mIn .3s ease;">
+      <div style="font-size:52px;margin-bottom:16px;">🔐</div>
+      <h2 style="font-size:20px;font-weight:800;margin-bottom:8px;color:#1a1a1a;">Faça login para ${action==='comprar'?'comprar':'continuar'}</h2>
+      <p style="font-size:14px;color:#888;margin-bottom:24px;">Crie sua conta gratuitamente ou entre para ${action==='comprar'?'finalizar sua compra':'continuar'}.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a href="cadastro.html" style="padding:13px;background:var(--salmon);color:#fff;border-radius:10px;font-size:14px;font-weight:700;display:block;">Criar conta grátis</a>
+        <a href="cadastro.html" style="padding:13px;background:#f5f5f5;color:#555;border-radius:10px;font-size:14px;font-weight:700;display:block;">Já tenho conta — Entrar</a>
+        <button onclick="this.closest('[style]').remove();" style="background:none;border:none;color:#aaa;font-size:13px;cursor:pointer;padding:8px;font-family:inherit;">Continuar navegando</button>
+      </div>
+    </div>`;
+  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
+  document.body.appendChild(overlay);
+}
+
+function addToCart(){
+  const badge = document.querySelector('.cart-badge');
+  badge.textContent = parseInt(badge.textContent||0) + 1;
+  closeModal();
+  const n = document.createElement('div');
+  n.style.cssText='position:fixed;top:80px;right:24px;background:#25D366;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);';
+  n.textContent='✓ Adicionado ao carrinho!';
+  document.body.appendChild(n);
+  setTimeout(()=>n.remove(), 2500);
+}
+
+function buyNow(){ addToCart(); alert('Redirecionando para o checkout...'); }
+
+// CEP mask
+document.getElementById('cepInput').addEventListener('input', function(){
+  this.value = this.value.replace(/\D/g,'').replace(/(\d{5})(\d)/,'$1-$2').slice(0,9);
+});
+</script>
+
+<!-- MODAL CONTATO GERAL -->
+<div id="contactModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:3000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:16px;width:100%;max-width:480px;overflow:hidden;animation:modalIn .3s ease;">
+    <div style="background:#1a1a1a;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;">
+      <h3 style="font-size:15px;font-weight:700;color:#fff;">✉️ Enviar Mensagem</h3>
+      <button onclick="document.getElementById('contactModal').classList.remove('open');document.getElementById('contactModal').style.display='none';"
+              style="background:none;border:none;cursor:pointer;color:#aaa;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:12px;">
+      <input id="ctName" type="text" placeholder="Seu nome" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:11px 14px;font-family:inherit;font-size:14px;outline:none;"/>
+      <input id="ctEmail" type="email" placeholder="Seu e-mail" style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:11px 14px;font-family:inherit;font-size:14px;outline:none;"/>
+      <textarea id="ctMsg" placeholder="Sua mensagem para a vendedora..." style="width:100%;border:1.5px solid #ddd;border-radius:8px;padding:11px 14px;font-family:inherit;font-size:14px;min-height:110px;resize:vertical;outline:none;"></textarea>
+      <button onclick="submitContactForm()" style="padding:13px;background:#E8735A;color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;">Enviar Mensagem</button>
+    </div>
+  </div>
+</div>
+<script>
+function submitContactForm(){
+  const name  = document.getElementById('ctName').value.trim();
+  const email = document.getElementById('ctEmail').value.trim();
+  const msg   = document.getElementById('ctMsg').value.trim();
+  if(!name || !email || !msg){ alert('Preencha todos os campos.'); return; }
+  const msgs = JSON.parse(localStorage.getItem('catiase_msgs')||'[]');
+  msgs.push({
+    id: Date.now(), name, email,
+    message: msg,
+    product: 'Contato Geral',
+    status: 'new',
+    date: new Date().toISOString(),
+    reply: null
+  });
+  localStorage.setItem('catiase_msgs', JSON.stringify(msgs));
+  document.getElementById('contactModal').style.display='none';
+  document.getElementById('ctName').value='';
+  document.getElementById('ctEmail').value='';
+  document.getElementById('ctMsg').value='';
+  const n = document.createElement('div');
+  n.style.cssText='position:fixed;top:24px;right:24px;background:#1a1a1a;color:#fff;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3);';
+  n.textContent='✅ Mensagem enviada! Responderemos em breve.';
+  document.body.appendChild(n);
+  setTimeout(()=>n.remove(), 3500);
+}
+// Abrir modal de contato quando classe 'open' for adicionada
+const contactObs = new MutationObserver(()=>{
+  const m = document.getElementById('contactModal');
+  if(m.classList.contains('open')) m.style.display='flex';
+});
+document.addEventListener('DOMContentLoaded',()=>{
+  const m = document.getElementById('contactModal');
+  if(m) contactObs.observe(m,{attributes:true,attributeFilter:['class']});
+  // Fechar ao clicar fora
+  m.addEventListener('click',function(e){ if(e.target===this){ this.classList.remove('open'); this.style.display='none'; }});
+});
+</script>
+
+<script>
+// Sincronizar badge do carrinho e nome do usuário
+(function(){
+  const cart = JSON.parse(localStorage.getItem('catiase_cart')||'[]');
+  const badge = document.getElementById('cartBadge');
+  if(badge) badge.textContent = cart.length;
+
+  const user = localStorage.getItem('catiase_loggedUser');
+  const label  = document.getElementById('loginLabel');
+  const btnEl  = document.getElementById('loginBtn');
+  if(label && user){
+    const u = JSON.parse(user);
+    const firstName = u.nome.split(' ')[0];
+    label.textContent = 'Olá, '+firstName;
+    if(btnEl) btnEl.href = 'perfil.html';
+  }
+})();
+
+// Sobrescrever addToCart para salvar no localStorage
+function showIndexToast(html){
+  const n=document.createElement('div');
+  n.style.cssText='position:fixed;top:24px;right:24px;background:#1a1a1a;color:#fff;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3);max-width:360px;';
+  n.innerHTML=html; document.body.appendChild(n);
+  setTimeout(()=>n.remove(),4000);
+}
+
+function showLoginRequired(action){
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;';
+  overlay.innerHTML=`
+    <div style="background:#fff;border-radius:20px;padding:40px 36px;max-width:400px;width:100%;text-align:center;animation:mIn .3s ease;">
+      <div style="font-size:52px;margin-bottom:16px;">🔐</div>
+      <h2 style="font-size:20px;font-weight:800;margin-bottom:8px;color:#1a1a1a;">Faça login para ${action==='comprar'?'comprar':'continuar'}</h2>
+      <p style="font-size:14px;color:#888;margin-bottom:24px;">Crie sua conta gratuitamente ou entre para ${action==='comprar'?'finalizar sua compra':'continuar'}.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a href="cadastro.html" style="padding:13px;background:var(--salmon);color:#fff;border-radius:10px;font-size:14px;font-weight:700;display:block;">Criar conta grátis</a>
+        <a href="cadastro.html" style="padding:13px;background:#f5f5f5;color:#555;border-radius:10px;font-size:14px;font-weight:700;display:block;">Já tenho conta — Entrar</a>
+        <button onclick="this.closest('[style]').remove();" style="background:none;border:none;color:#aaa;font-size:13px;cursor:pointer;padding:8px;font-family:inherit;">Continuar navegando</button>
+      </div>
+    </div>`;
+  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
+  document.body.appendChild(overlay);
+}
+
+function addToCart(){
+  const prod = {
+    brand: document.getElementById('modalBrand').textContent,
+    name:  document.getElementById('modalTitle').textContent,
+    size:  document.getElementById('modalSize').textContent.replace('Tamanho: ',''),
+    condition: document.getElementById('modalCondition').textContent.replace('Estado: ',''),
+    price: parseFloat(document.getElementById('modalPrice').textContent.replace('R$ ','').replace(',','.'))
+  };
+  const cart = JSON.parse(localStorage.getItem('catiase_cart')||'[]');
+  cart.push(prod);
+  localStorage.setItem('catiase_cart', JSON.stringify(cart));
+  const badge = document.getElementById('cartBadge');
+  if(badge) badge.textContent = cart.length;
+  closeModal();
+  const n = document.createElement('div');
+  n.style.cssText='position:fixed;top:24px;right:24px;background:#1a1a1a;color:#fff;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3);display:flex;align-items:center;gap:10px;';
+  n.innerHTML='<span style="color:#E8735A;">✓</span> Adicionado ao carrinho! <a href="carrinho.html" style="color:#C9A84C;font-weight:700;margin-left:4px;">Ver carrinho →</a>';
+  document.body.appendChild(n);
+  setTimeout(()=>n.remove(), 3000);
+}
+</script>
+</body>
+</html>

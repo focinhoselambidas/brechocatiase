@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Fale Conosco — Catia-se Brechó</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#C9A84C;--salmon:#E8735A;--dark:#1a1a1a;--font:'Poppins',sans-serif;}
+body{font-family:var(--font);background:#f8f8f8;color:#222;}
+a{text-decoration:none;color:inherit;}
+
+.header{background:var(--dark);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.header a{display:flex;align-items:center;gap:12px;}
+.header img{height:64px;width:auto;}
+.back-btn{display:flex;align-items:center;gap:8px;background:#2a2a2a;color:#ccc;padding:9px 18px;border-radius:50px;font-size:13px;font-weight:600;transition:background .2s,color .2s;}
+.back-btn:hover{background:var(--salmon);color:#fff;}
+
+.hero{background:linear-gradient(135deg,var(--dark) 0%,#2a1a0a 100%);padding:60px 32px;text-align:center;}
+.hero h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;}
+.hero h1 span{color:var(--gold);}
+.hero p{font-size:15px;color:#888;}
+
+.container{max-width:820px;margin:0 auto;padding:48px 32px;}
+.card{background:#fff;border-radius:16px;padding:36px 40px;box-shadow:0 4px 20px rgba(0,0,0,.07);}
+.card h2{font-size:18px;font-weight:700;color:var(--dark);margin:28px 0 12px;display:flex;align-items:center;gap:10px;}
+.card h2:first-child{margin-top:0;}
+.card h2::before{content:'';width:4px;height:20px;background:var(--salmon);border-radius:2px;display:block;flex-shrink:0;}
+.card p{font-size:14px;color:#555;line-height:1.8;margin-bottom:10px;}
+.card ul{margin:10px 0 16px 20px;}
+.card ul li{font-size:14px;color:#555;line-height:1.9;}
+.card .highlight{background:#fff8f6;border-left:4px solid var(--salmon);padding:14px 18px;border-radius:0 10px 10px 0;margin:16px 0;font-size:14px;color:#555;}
+
+.footer-mini{background:var(--dark);padding:20px 32px;text-align:center;font-size:12px;color:#555;margin-top:40px;}
+.footer-mini a{color:var(--salmon);}
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="index.html"><img src="logo.png" alt="Catia-se Brechó"/></a>
+  <a href="index.html" class="back-btn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Voltar ao site
+  </a>
+</header>
+
+<div class="hero">
+  <h1>Fale <span>Conosco</span></h1>
+  <p>Estamos aqui para ajudar você!</p>
+</div>
+<div class="container">
+  <div class="card">
+    <h2>Envie sua Mensagem</h2>
+    <p>Preencha o formulário abaixo e responderemos o mais breve possível.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px;">
+      <input id="fcName" type="text" placeholder="Seu nome completo" style="width:100%;border:1.5px solid #ddd;border-radius:10px;padding:13px 16px;font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='#E8735A'" onblur="this.style.borderColor='#ddd'"/>
+      <input id="fcEmail" type="email" placeholder="Seu e-mail" style="width:100%;border:1.5px solid #ddd;border-radius:10px;padding:13px 16px;font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='#E8735A'" onblur="this.style.borderColor='#ddd'"/>
+      <input id="fcSubject" type="text" placeholder="Assunto" style="width:100%;border:1.5px solid #ddd;border-radius:10px;padding:13px 16px;font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='#E8735A'" onblur="this.style.borderColor='#ddd'"/>
+      <textarea id="fcMsg" placeholder="Sua mensagem..." style="width:100%;border:1.5px solid #ddd;border-radius:10px;padding:13px 16px;font-family:inherit;font-size:14px;min-height:130px;resize:vertical;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='#E8735A'" onblur="this.style.borderColor='#ddd'"></textarea>
+      <button onclick="sendContact()" style="padding:14px;background:#E8735A;color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='#C45A43'" onmouseout="this.style.background='#E8735A'">✉️ Enviar Mensagem</button>
+      <div id="fcSuccess" style="display:none;background:#e8f5e9;border-radius:10px;padding:14px;font-size:14px;color:#388e3c;text-align:center;">✅ Mensagem enviada! Responderemos em breve.</div>
+    </div>
+
+    <h2 style="margin-top:32px;">Nossas Redes Sociais</h2>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="https://www.instagram.com/catiaselooksestilos" target="_blank"
+         style="display:flex;align-items:center;gap:10px;background:#f8f8f8;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;transition:background .2s;"
+         onmouseover="this.style.background='#fce4ec'" onmouseout="this.style.background='#f8f8f8'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        @catiaselooksestilos
+      </a>
+      <a href="https://www.tiktok.com/@catiaselooksestilos" target="_blank"
+         style="display:flex;align-items:center;gap:10px;background:#f8f8f8;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;transition:background .2s;"
+         onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='#f8f8f8'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1a1a1a"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-6.13 6.3 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        @catiaselooksestilos
+      </a>
+    </div>
+  </div>
+</div>
+<script>
+function sendContact(){{
+  const name=document.getElementById('fcName').value.trim();
+  const email=document.getElementById('fcEmail').value.trim();
+  const subject=document.getElementById('fcSubject').value.trim();
+  const msg=document.getElementById('fcMsg').value.trim();
+  if(!name||!email||!msg){{alert('Preencha nome, e-mail e mensagem.');return;}}
+  const msgs=JSON.parse(localStorage.getItem('catiase_msgs')||'[]');
+  msgs.push({{id:Date.now(),name,email,message:(subject?'['+subject+'] ':'')+msg,product:'Fale Conosco',status:'new',date:new Date().toISOString(),reply:null}});
+  localStorage.setItem('catiase_msgs',JSON.stringify(msgs));
+  notifyAdminWhatsApp(name, '['+subject+'] Fale Conosco', msg);
+  document.getElementById('fcName').value='';
+  document.getElementById('fcEmail').value='';
+  document.getElementById('fcSubject').value='';
+  document.getElementById('fcMsg').value='';
+  document.getElementById('fcSuccess').style.display='block';
+  setTimeout(()=>document.getElementById('fcSuccess').style.display='none',5000);
+}}
+
+function notifyAdminWhatsApp(clientName, product, question){
+  const ADMIN_PHONE = '5524988114014';
+  const text =
+    '\u{1F6CD}\uFE0F *Nova pergunta no Catia-se Brechó!*\n\n' +
+    '\u{1F464} *Cliente:* ' + clientName + '\n' +
+    '\u{1F4E6} *Produto:* ' + product + '\n' +
+    '\u{1F4AC} *Pergunta:* ' + question + '\n\n' +
+    '\u{1F449} Responda pelo painel: admin.html';
+  const url = 'https://wa.me/' + ADMIN_PHONE + '?text=' + encodeURIComponent(text);
+  const link = document.createElement('a');
+  link.href=url; link.target='_blank'; link.rel='noopener'; link.style.display='none';
+  document.body.appendChild(link); link.click();
+  setTimeout(()=>link.remove(), 1000);
+}
+</script>
+<div class="footer-mini">© 2026 Catia-se Brechó · <a href="index.html">Voltar ao site</a></div>
+</body>
+</html>

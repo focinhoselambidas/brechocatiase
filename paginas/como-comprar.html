@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Como Comprar — Catia-se Brechó</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#C9A84C;--salmon:#E8735A;--dark:#1a1a1a;--font:'Poppins',sans-serif;}
+body{font-family:var(--font);background:#f8f8f8;color:#222;}
+a{text-decoration:none;color:inherit;}
+
+.header{background:var(--dark);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.header a{display:flex;align-items:center;gap:12px;}
+.header img{height:64px;width:auto;}
+.back-btn{display:flex;align-items:center;gap:8px;background:#2a2a2a;color:#ccc;padding:9px 18px;border-radius:50px;font-size:13px;font-weight:600;transition:background .2s,color .2s;}
+.back-btn:hover{background:var(--salmon);color:#fff;}
+
+.hero{background:linear-gradient(135deg,var(--dark) 0%,#2a1a0a 100%);padding:60px 32px;text-align:center;}
+.hero h1{font-size:36px;font-weight:800;color:#fff;margin-bottom:10px;}
+.hero h1 span{color:var(--gold);}
+.hero p{font-size:15px;color:#888;}
+
+.container{max-width:820px;margin:0 auto;padding:48px 32px;}
+.card{background:#fff;border-radius:16px;padding:36px 40px;box-shadow:0 4px 20px rgba(0,0,0,.07);}
+.card h2{font-size:18px;font-weight:700;color:var(--dark);margin:28px 0 12px;display:flex;align-items:center;gap:10px;}
+.card h2:first-child{margin-top:0;}
+.card h2::before{content:'';width:4px;height:20px;background:var(--salmon);border-radius:2px;display:block;flex-shrink:0;}
+.card p{font-size:14px;color:#555;line-height:1.8;margin-bottom:10px;}
+.card ul{margin:10px 0 16px 20px;}
+.card ul li{font-size:14px;color:#555;line-height:1.9;}
+.card .highlight{background:#fff8f6;border-left:4px solid var(--salmon);padding:14px 18px;border-radius:0 10px 10px 0;margin:16px 0;font-size:14px;color:#555;}
+
+.footer-mini{background:var(--dark);padding:20px 32px;text-align:center;font-size:12px;color:#555;margin-top:40px;}
+.footer-mini a{color:var(--salmon);}
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="index.html"><img src="logo.png" alt="Catia-se Brechó"/></a>
+  <a href="index.html" class="back-btn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Voltar ao site
+  </a>
+</header>
+
+<div class="hero">
+  <h1>Como <span>Comprar</span></h1>
+  <p>Simples, rápido e seguro em poucos passos</p>
+</div>
+<div class="container">
+  <div class="card">
+    <h2>Passo 1 — Encontre sua peça</h2>
+    <p>Navegue pelas categorias ou use a busca para encontrar a peça perfeita. Cada produto tem fotos detalhadas, descrição, tamanho e estado de conservação.</p>
+
+    <h2>Passo 2 — Veja os detalhes</h2>
+    <p>Clique no produto para ver todas as informações. Calcule o frete pelo seu CEP direto na página do produto antes de finalizar a compra.</p>
+
+    <h2>Passo 3 — Adicione ao Carrinho</h2>
+    <p>Escolheu? Clique em <strong>"Adicionar ao Carrinho"</strong> ou <strong>"Comprar Agora"</strong> para ir direto ao pagamento.</p>
+
+    <h2>Passo 4 — Finalize o Pagamento</h2>
+    <p>Escolha sua forma de pagamento preferida:</p>
+    <ul>
+      <li>💳 Cartão de crédito em até <strong>6x sem juros</strong></li>
+      <li>💳 Cartão de débito</li>
+      <li>⚡ PIX — aprovação instantânea</li>
+    </ul>
+    <div class="highlight">🔒 Pagamento 100% seguro via Mercado Pago.</div>
+
+    <h2>Passo 5 — Acompanhe sua entrega</h2>
+    <p>Após a confirmação do pagamento, você receberá o código de rastreamento por e-mail. Acompanhe sua encomenda até chegar na sua porta!</p>
+
+    <h2>Tem dúvidas?</h2>
+    <p>Use o botão <strong>"Perguntar ao Vendedor"</strong> em qualquer produto, ou acesse nossa página <a href="fale-conosco.html" style="color:var(--salmon);">Fale Conosco</a>.</p>
+  </div>
+</div>
+<div class="footer-mini">© 2026 Catia-se Brechó · <a href="index.html">Voltar ao site</a></div>
+</body>
+</html>
