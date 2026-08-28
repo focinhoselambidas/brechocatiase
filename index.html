@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Catia-se Brechó | Moda com Estilo e Consciência</title>
 <meta name="description" content="Catia-se Brechó Online — Peças femininas, masculinas, infantis, acessórios e calçados com preço justo. Pagamos seus desapegos à vista!"/>
-<script src="supabase.js"></script>
+<script src="js/supabase.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -246,7 +246,9 @@ button{font-family:var(--font);cursor:pointer;border:none;outline:none;}
     /* Filtros rápidos */
     .qf-btn{padding:7px 16px;border-radius:20px;border:1.5px solid #e0e0e0;background:#fff;font-family:inherit;font-size:12px;font-weight:600;color:#555;cursor:pointer;transition:all .2s;white-space:nowrap;}
     .qf-btn:hover,.qf-btn.active{background:var(--salmon);color:#fff;border-color:var(--salmon);}
-</style>
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
 
@@ -258,7 +260,7 @@ button{font-family:var(--font);cursor:pointer;border:none;outline:none;}
     <!-- Logo -->
     <div class="logo">
       <a href="index.html">
-        <img src="logo.png" alt="Catia-se Brechó" class="logo-img"/>
+        <img src="imagens/logo.png" alt="Catia-se Brechó" class="logo-img"/>
         <div class="logo-fade"></div>
       </a>
     </div>
@@ -276,15 +278,15 @@ button{font-family:var(--font);cursor:pointer;border:none;outline:none;}
 
     <!-- Ações -->
     <div style="display:flex;align-items:center;gap:4px;margin-left:auto;flex-shrink:0;">
-      <a href="cadastro.html" class="h-action">
+      <a href="paginas/cadastro.html" class="h-action">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span>Cadastro</span>
       </a>
-      <a id="loginBtn" href="cadastro.html" class="h-action">
+      <a id="loginBtn" href="paginas/cadastro.html" class="h-action">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
         <span id="loginLabel">Entrar</span>
       </a>
-      <a href="carrinho.html" class="h-action" style="position:relative;">
+      <a href="paginas/carrinho.html" class="h-action" style="position:relative;">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         <span>Carrinho</span>
         <span id="cartBadge" style="position:absolute;top:4px;right:6px;background:#E8735A;color:#fff;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">0</span>
@@ -302,35 +304,35 @@ button{font-family:var(--font);cursor:pointer;border:none;outline:none;}
       <h2 class="section__title">Categorias</h2>
     </div>
     <div class="cat-grid">
-      <a href="categoria.html?cat=promocao" class="cat-card">
+      <a href="paginas/categoria.html?cat=promocao" class="cat-card">
         <div class="cat-card__icon c1"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
         <span class="cat-card__label">Promoção</span>
       </a>
-      <a href="categoria.html?cat=grife" class="cat-card">
+      <a href="paginas/categoria.html?cat=grife" class="cat-card">
         <div class="cat-card__icon c2"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
         <span class="cat-card__label">Grife</span>
       </a>
-      <a href="categoria.html?cat=novidades" class="cat-card">
+      <a href="paginas/categoria.html?cat=novidades" class="cat-card">
         <div class="cat-card__icon c3"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
         <span class="cat-card__label">Novidades</span>
       </a>
-      <a href="categoria.html?cat=feminino" class="cat-card">
+      <a href="paginas/categoria.html?cat=feminino" class="cat-card">
         <div class="cat-card__icon c4"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg></div>
         <span class="cat-card__label">Feminino</span>
       </a>
-      <a href="categoria.html?cat=masculino" class="cat-card">
+      <a href="paginas/categoria.html?cat=masculino" class="cat-card">
         <div class="cat-card__icon c5"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg></div>
         <span class="cat-card__label">Masculino</span>
       </a>
-      <a href="categoria.html?cat=infantil" class="cat-card">
+      <a href="paginas/categoria.html?cat=infantil" class="cat-card">
         <div class="cat-card__icon c6"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
         <span class="cat-card__label">Infantil</span>
       </a>
-      <a href="categoria.html?cat=acessorios" class="cat-card">
+      <a href="paginas/categoria.html?cat=acessorios" class="cat-card">
         <div class="cat-card__icon c7"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="10"/></svg></div>
         <span class="cat-card__label">Acessórios</span>
       </a>
-      <a href="categoria.html?cat=calcados" class="cat-card">
+      <a href="paginas/categoria.html?cat=calcados" class="cat-card">
         <div class="cat-card__icon c8"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M2 18l4-8 4 3 4-7 4 12H2z"/></svg></div>
         <span class="cat-card__label">Calçados</span>
       </a>
@@ -377,11 +379,11 @@ button{font-family:var(--font);cursor:pointer;border:none;outline:none;}
 <!-- FOOTER LINKS -->
 <div class="footer-links">
   <div class="footer-links__inner">
-    <a href="quem-somos.html">Quem Somos</a>
-    <a href="compra-segura.html">Compra Segura</a>
-    <a href="fale-conosco.html">Fale Conosco</a>
-    <a href="como-comprar.html">Como Comprar</a>
-    <a href="privacidade.html">Política de Privacidade</a>
+    <a href="paginas/quem-somos.html">Quem Somos</a>
+    <a href="paginas/compra-segura.html">Compra Segura</a>
+    <a href="paginas/fale-conosco.html">Fale Conosco</a>
+    <a href="paginas/como-comprar.html">Como Comprar</a>
+    <a href="paginas/privacidade.html">Política de Privacidade</a>
   </div>
 </div>
 
@@ -722,8 +724,8 @@ function toggleAskForm(){
           <p style="font-size:13px;font-weight:700;color:#333;margin-bottom:6px;">Para fazer perguntas é necessário ter uma conta</p>
           <p style="font-size:12px;color:#888;margin-bottom:14px;">Cadastre-se gratuitamente e fale com a vendedora!</p>
           <div style="display:flex;gap:8px;justify-content:center;">
-            <a href="cadastro.html" onclick="localStorage.setItem('catiase_redirect',window.location.href);" style="padding:10px 20px;background:var(--salmon);color:#fff;border-radius:8px;font-size:13px;font-weight:700;">Criar conta grátis</a>
-            <a href="cadastro.html" onclick="localStorage.setItem('catiase_redirect',window.location.href);" style="padding:10px 20px;background:#f5f5f5;color:#555;border-radius:8px;font-size:13px;font-weight:700;">Já tenho conta</a>
+            <a href="paginas/cadastro.html" onclick="localStorage.setItem('catiase_redirect',window.location.href);" style="padding:10px 20px;background:var(--salmon);color:#fff;border-radius:8px;font-size:13px;font-weight:700;">Criar conta grátis</a>
+            <a href="paginas/cadastro.html" onclick="localStorage.setItem('catiase_redirect',window.location.href);" style="padding:10px 20px;background:#f5f5f5;color:#555;border-radius:8px;font-size:13px;font-weight:700;">Já tenho conta</a>
           </div>
         </div>`;
       return;
@@ -809,8 +811,8 @@ function showLoginRequired(action){
       <h2 style="font-size:20px;font-weight:800;margin-bottom:8px;color:#1a1a1a;">Faça login para ${action==='comprar'?'comprar':'continuar'}</h2>
       <p style="font-size:14px;color:#888;margin-bottom:24px;">Crie sua conta gratuitamente ou entre para ${action==='comprar'?'finalizar sua compra':'continuar'}.</p>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <a href="cadastro.html" style="padding:13px;background:var(--salmon);color:#fff;border-radius:10px;font-size:14px;font-weight:700;display:block;">Criar conta grátis</a>
-        <a href="cadastro.html" style="padding:13px;background:#f5f5f5;color:#555;border-radius:10px;font-size:14px;font-weight:700;display:block;">Já tenho conta — Entrar</a>
+        <a href="paginas/cadastro.html" style="padding:13px;background:var(--salmon);color:#fff;border-radius:10px;font-size:14px;font-weight:700;display:block;">Criar conta grátis</a>
+        <a href="paginas/cadastro.html" style="padding:13px;background:#f5f5f5;color:#555;border-radius:10px;font-size:14px;font-weight:700;display:block;">Já tenho conta — Entrar</a>
         <button onclick="this.closest('[style]').remove();" style="background:none;border:none;color:#aaa;font-size:13px;cursor:pointer;padding:8px;font-family:inherit;">Continuar navegando</button>
       </div>
     </div>`;
@@ -929,8 +931,8 @@ function showLoginRequired(action){
       <h2 style="font-size:20px;font-weight:800;margin-bottom:8px;color:#1a1a1a;">Faça login para ${action==='comprar'?'comprar':'continuar'}</h2>
       <p style="font-size:14px;color:#888;margin-bottom:24px;">Crie sua conta gratuitamente ou entre para ${action==='comprar'?'finalizar sua compra':'continuar'}.</p>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <a href="cadastro.html" style="padding:13px;background:var(--salmon);color:#fff;border-radius:10px;font-size:14px;font-weight:700;display:block;">Criar conta grátis</a>
-        <a href="cadastro.html" style="padding:13px;background:#f5f5f5;color:#555;border-radius:10px;font-size:14px;font-weight:700;display:block;">Já tenho conta — Entrar</a>
+        <a href="paginas/cadastro.html" style="padding:13px;background:var(--salmon);color:#fff;border-radius:10px;font-size:14px;font-weight:700;display:block;">Criar conta grátis</a>
+        <a href="paginas/cadastro.html" style="padding:13px;background:#f5f5f5;color:#555;border-radius:10px;font-size:14px;font-weight:700;display:block;">Já tenho conta — Entrar</a>
         <button onclick="this.closest('[style]').remove();" style="background:none;border:none;color:#aaa;font-size:13px;cursor:pointer;padding:8px;font-family:inherit;">Continuar navegando</button>
       </div>
     </div>`;
@@ -954,7 +956,7 @@ function addToCart(){
   closeModal();
   const n = document.createElement('div');
   n.style.cssText='position:fixed;top:24px;right:24px;background:#1a1a1a;color:#fff;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3);display:flex;align-items:center;gap:10px;';
-  n.innerHTML='<span style="color:#E8735A;">✓</span> Adicionado ao carrinho! <a href="carrinho.html" style="color:#C9A84C;font-weight:700;margin-left:4px;">Ver carrinho →</a>';
+  n.innerHTML='<span style="color:#E8735A;">✓</span> Adicionado ao carrinho! <a href="paginas/carrinho.html" style="color:#C9A84C;font-weight:700;margin-left:4px;">Ver carrinho →</a>';
   document.body.appendChild(n);
   setTimeout(()=>n.remove(), 3000);
 }
