@@ -248,7 +248,26 @@ button{font-family:var(--font);cursor:pointer;border:none;outline:none;}
     .qf-btn:hover,.qf-btn.active{background:var(--salmon);color:#fff;border-color:var(--salmon);}
 
     @keyframes spin { to { transform: rotate(360deg); } }
-    </style>
+    
+    /* Modal bottom sheet mobile */
+    @media(max-width:600px){
+      .modal-overlay{
+        align-items:flex-end !important;
+        padding:0 !important;
+      }
+      .modal{
+        border-radius:20px 20px 0 0 !important;
+        max-height:92vh;
+        margin:0;
+        width:100%;
+        animation:slideUp .3s ease;
+      }
+      @keyframes slideUp{
+        from{transform:translateY(100%);}
+        to{transform:translateY(0);}
+      }
+    }
+</style>
 </head>
 <body>
 

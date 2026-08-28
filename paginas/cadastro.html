@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cadastro — Catia-se Brechó</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-<script src="supabase.js"></script>
+<script src="../js/supabase.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{--gold:#C9A84C;--salmon:#E8735A;--salmon-dark:#C45A43;--dark:#1a1a1a;--gray:#888;--font:'Poppins',sans-serif;}
@@ -40,12 +40,43 @@ body{font-family:var(--font);background:linear-gradient(135deg,#1a1a1a 0%,#2a150
 .back-link a:hover{color:#fff;}
 .loading{display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px;}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── MOBILE GERAL ── */
+    @media(max-width:600px){
+      .header{padding:10px 16px !important;}
+      .header img{height:64px !important;}
+      .back-btn{padding:7px 14px;font-size:12px;}
+      .container{padding:0 14px !important;}
+      .box{border-radius:16px;}
+      .box-body{padding:20px 16px;}
+      .field-row{grid-template-columns:1fr !important;}
+      .quick-row{grid-template-columns:1fr !important;}
+      .field-row3{grid-template-columns:1fr !important;}
+      .chips-row{gap:6px;}
+      .chip{padding:7px 12px;font-size:12px;}
+      .wcard{padding:20px 16px;}
+      .wizard-steps{margin-bottom:20px;}
+      .wstep__label{font-size:9px;}
+      .product-grid{grid-template-columns:repeat(2,1fr) !important;gap:10px;}
+      .modal__inner{grid-template-columns:1fr !important;}
+      .modal__gallery{border-radius:16px 16px 0 0 !important;}
+      .modal__info{padding:16px !important;}
+      .cart-item{gap:10px;padding:12px 16px;}
+      .cart-item__img{width:56px;height:70px;}
+      .profile-side,.profile-main{padding:0;}
+      .container{max-width:100% !important;}
+      .summary{margin:0 !important;}
+    }
+    @media(max-width:380px){
+      .header img{height:52px !important;}
+      .product-grid{grid-template-columns:repeat(2,1fr) !important;}
+    }
 </style>
 </head>
 <body>
 <div class="box">
   <div class="box-header">
-    <img src="logo.png" alt="Catia-se Brechó"/>
+    <img src="../imagens/logo.png" alt="Catia-se Brechó"/>
     <p>Bem-vinda! Crie sua conta ou acesse para continuar</p>
   </div>
   <div class="box-body">
@@ -87,7 +118,7 @@ body{font-family:var(--font);background:linear-gradient(135deg,#1a1a1a 0%,#2a150
     </div>
   </div>
 </div>
-<div class="back-link"><a href="index.html">← Voltar ao site</a></div>
+<div class="back-link"><a href="../index.html">← Voltar ao site</a></div>
 
 <script>
 function switchTab(tab){

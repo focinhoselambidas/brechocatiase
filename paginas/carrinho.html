@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Carrinho — Catia-se Brechó</title>
-<script src="supabase.js"></script>
+<script src="../js/supabase.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -68,12 +68,43 @@ a{text-decoration:none;color:inherit;}
 .secure-info{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--gray);margin-top:12px;}
 
 @media(max-width:768px){.container{grid-template-columns:1fr;}.summary{position:static;}}
+
+    /* ── MOBILE GERAL ── */
+    @media(max-width:600px){
+      .header{padding:10px 16px !important;}
+      .header img{height:64px !important;}
+      .back-btn{padding:7px 14px;font-size:12px;}
+      .container{padding:0 14px !important;}
+      .box{border-radius:16px;}
+      .box-body{padding:20px 16px;}
+      .field-row{grid-template-columns:1fr !important;}
+      .quick-row{grid-template-columns:1fr !important;}
+      .field-row3{grid-template-columns:1fr !important;}
+      .chips-row{gap:6px;}
+      .chip{padding:7px 12px;font-size:12px;}
+      .wcard{padding:20px 16px;}
+      .wizard-steps{margin-bottom:20px;}
+      .wstep__label{font-size:9px;}
+      .product-grid{grid-template-columns:repeat(2,1fr) !important;gap:10px;}
+      .modal__inner{grid-template-columns:1fr !important;}
+      .modal__gallery{border-radius:16px 16px 0 0 !important;}
+      .modal__info{padding:16px !important;}
+      .cart-item{gap:10px;padding:12px 16px;}
+      .cart-item__img{width:56px;height:70px;}
+      .profile-side,.profile-main{padding:0;}
+      .container{max-width:100% !important;}
+      .summary{margin:0 !important;}
+    }
+    @media(max-width:380px){
+      .header img{height:52px !important;}
+      .product-grid{grid-template-columns:repeat(2,1fr) !important;}
+    }
 </style>
 </head>
 <body>
 <header class="header">
-  <a href="index.html"><img src="logo.png" alt="Catia-se Brechó"/></a>
-  <a href="index.html" class="back-btn">
+  <a href="../index.html"><img src="../imagens/logo.png" alt="Catia-se Brechó"/></a>
+  <a href="../index.html" class="back-btn">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
     Continuar Comprando
   </a>
@@ -139,7 +170,7 @@ function renderCart(){
       <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       <h3>Seu carrinho está vazio</h3>
       <p>Adicione produtos para continuar</p>
-      <a href="index.html" class="btn-shop">🛍️ Ver Produtos</a>
+      <a href="../index.html" class="btn-shop">🛍️ Ver Produtos</a>
     </div>`;
     document.getElementById('checkoutBtn').disabled = true;
     updateTotals(0);

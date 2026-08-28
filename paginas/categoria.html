@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Categoria — Catia-se Brechó</title>
-<script src="supabase.js"></script>
+<script src="../js/supabase.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -113,12 +113,43 @@ a{text-decoration:none;color:inherit;}
 
 @media(max-width:900px){.product-grid{grid-template-columns:repeat(3,1fr);}.modal__inner{grid-template-columns:1fr;}.modal__gallery{border-radius:16px 16px 0 0;}}
 @media(max-width:600px){.product-grid{grid-template-columns:repeat(2,1fr);}}
+
+    /* ── MOBILE GERAL ── */
+    @media(max-width:600px){
+      .header{padding:10px 16px !important;}
+      .header img{height:64px !important;}
+      .back-btn{padding:7px 14px;font-size:12px;}
+      .container{padding:0 14px !important;}
+      .box{border-radius:16px;}
+      .box-body{padding:20px 16px;}
+      .field-row{grid-template-columns:1fr !important;}
+      .quick-row{grid-template-columns:1fr !important;}
+      .field-row3{grid-template-columns:1fr !important;}
+      .chips-row{gap:6px;}
+      .chip{padding:7px 12px;font-size:12px;}
+      .wcard{padding:20px 16px;}
+      .wizard-steps{margin-bottom:20px;}
+      .wstep__label{font-size:9px;}
+      .product-grid{grid-template-columns:repeat(2,1fr) !important;gap:10px;}
+      .modal__inner{grid-template-columns:1fr !important;}
+      .modal__gallery{border-radius:16px 16px 0 0 !important;}
+      .modal__info{padding:16px !important;}
+      .cart-item{gap:10px;padding:12px 16px;}
+      .cart-item__img{width:56px;height:70px;}
+      .profile-side,.profile-main{padding:0;}
+      .container{max-width:100% !important;}
+      .summary{margin:0 !important;}
+    }
+    @media(max-width:380px){
+      .header img{height:52px !important;}
+      .product-grid{grid-template-columns:repeat(2,1fr) !important;}
+    }
 </style>
 </head>
 <body>
 
 <header class="header">
-  <a href="index.html"><img src="logo.png" alt="Catia-se Brechó"/></a>
+  <a href="../index.html"><img src="../imagens/logo.png" alt="Catia-se Brechó"/></a>
   <div class="header-right">
     <a id="loginBtn" href="cadastro.html" class="h-btn">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -133,7 +164,7 @@ a{text-decoration:none;color:inherit;}
 </header>
 
 <div class="breadcrumb">
-  <a href="index.html">Início</a>
+  <a href="../index.html">Início</a>
   <span>›</span>
   <span id="breadCat">Categoria</span>
 </div>
